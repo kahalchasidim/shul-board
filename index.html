@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/kosher-zmanim/2.3.0/kosher-zmanim.min.js"></script>
 <style> 
-  @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@700;800&family=Suez+One&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   
   :root { --gold: #c29d6d; --bg: #000; }
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
@@ -12,7 +12,7 @@
   body { 
     background: #000; 
     color: #fff; 
-    font-family: 'Suez One', 'Assistant', sans-serif;
+    font-family: 'Suez One', serif; 
     width: 100vw; 
     height: 100vh; 
   }
@@ -24,51 +24,62 @@
   }
   
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
-  #BSD { position: absolute; right: 15px; font-size: 14px; color: var(--gold); }
+  #BSD { position: absolute; right: 15px; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
+  #ENG_DATE { position: absolute; left: 15px; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
 
   .clock-section { height: 16vh; display: flex; align-items: center; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; padding: 0 20px; background: #000; }
   .status-stack { flex: 2; text-align: center; border-left: 1px solid #333; height: 90%; display: flex; flex-direction: column; justify-content: center; }
-  .main-clock { flex: 2.2; text-align: center; font-size: 13vh; font-weight: 800; color: white; line-height: 1; }
+  
+  .main-clock { 
+    flex: 2.2; 
+    text-align: center; 
+    font-size: 13vh; 
+    font-weight: 800; 
+    color: white; 
+    line-height: 1; 
+    font-family: 'Assistant', sans-serif; 
+  }
 
   .main-body { height: 72vh; display: flex; gap: 12px; }
   
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
-  .z-label { color: var(--gold); font-size: 2.5vh; font-weight: 700; }
-  .z-time { color: white; font-size: 2.5vh; font-weight: 800; }
+  .z-label { color: var(--gold); font-size: 2.5vh; }
+  .z-time { color: white; font-size: 2.5vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
 
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
-  
-  /* Top Row remains the same */
   .top-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 10px; }
   .hybrid-box { flex: 1.5; border: 2px solid var(--gold); border-radius: 10px; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
 
-  /* Bottom Row Adjusted for 11x8.5 aspect ratio Flyers */
   .bottom-row { height: 48%; display: flex; gap: 12px; }
   .small-img-container { flex: 1.4; border: 2px solid var(--gold); border-radius: 10px; overflow: hidden; background: #000; }
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
   
-  #RC_NOTICE { color: #fff; background: #8b0000; padding: 4px 15px; border-radius: 6px; font-size: 2.2vh; font-weight: 800; margin-top: 5px; display: block; }
+  #RC_NOTICE { color: #fff; background: #8b0000; padding: 4px 15px; border-radius: 6px; font-size: 2.2vh; margin-top: 5px; display: block; }
 </style>
 </head>
 <body>
 
 <div class="master-frame">
-  <div class="branding-bar"><div id="BSD">בס״ד</div><div style="font-size:3.2vh; font-weight:800; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div></div>
+  <div class="branding-bar">
+    <div id="ENG_DATE">April 17, 2026</div>
+    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
+    <div id="BSD">בס"ד</div> 
+  </div>
 
   <div class="clock-section">
     <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size: 4.5vh; font-weight: 800;">ערב שבת קודש</div>
-        <div id="DATE_LABEL" style="font-size: 3vh; color: var(--gold); font-weight: 700;">ל׳ ניסן תשפ״ו</div>
-        <div id="PARSHA_LABEL" style="font-size: 2.4vh; color: #ccc;">תזריע-מצורע</div>
-        <div id="RC_NOTICE">ראש חודש</div>
+        <div id="DAY_LABEL" style="font-size: 4.5vh;">ערב שבת קודש</div>
+        <div id="DATE_LABEL" style="font-size: 3vh; color: var(--gold);">ל׳ ניסן תשפ״ו</div>
+        <div id="PARSHA_LABEL" style="font-size: 2.2vh; color: #ccc;">תזריע-מצורע</div>
+        <div id="RC_NOTICE" style="display: block;">ראש חודש</div>
     </div>
     <div class="main-clock" id="CLOCK">00:00:00</div>
   </div>
 
   <div class="main-body">
-    <div class="zemanim-col" id="z-list">
+    <div class="zemanim-col">
         <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">4:46</span></div>
         <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time" id="z2">5:20</span></div>
         <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">6:10</span></div>
@@ -84,22 +95,20 @@
 
     <div class="content-col">
       <div class="top-row">
-        <div class="data-box"><span id="ANN" style="font-size:4.5vh; font-weight:800;">...</span></div>
+        <div class="data-box"><span id="ANN" style="font-size:4.5vh;"></span></div>
         <div class="hybrid-box">
-            <div id="CENTER_TEXT" style="font-size:4.5vh; color:var(--gold); font-weight:800; text-align:center;"></div>
+            <div id="CENTER_TEXT" style="font-size:4.5vh; color:var(--gold); text-align:center;"></div>
             <img id="p1" style="width:100%; height:100%; object-fit:contain; display:none;">
         </div>
-        <div class="data-box"><span id="TEF" style="font-size:4.5vh; font-weight:800;">...</span></div>
+        <div class="data-box"><span id="TEF" style="font-size:4.5vh;"></span></div>
       </div>
 
       <div class="bottom-row">
         <div class="small-img-container"><img id="p4" style="width:100%; height:100%; object-fit:contain;"></div>
-        
         <div class="omer-box">
-            <div style="font-size:3vh; color:white; font-weight:800; margin-bottom:5px;">ספירת העומר</div>
-            <div id="O2" style="font-size:2.8vh; color:var(--gold); font-weight:800; line-height: 1.1;">היום חמישה עשר יום שהם שני שבועות ויום אחד לעומר</div>
+            <div style="font-size:3vh; color:white; margin-bottom:5px;">ספירת העומר</div>
+            <div id="O2" style="font-size:2.8vh; color:var(--gold); line-height: 1.1;">היום חמישה עשר יום שהם שני שבועות ויום אחד לעומר</div>
         </div>
-        
         <div class="small-img-container"><img id="p5" style="width:100%; height:100%; object-fit:contain;"></div>
       </div>
     </div>
@@ -125,6 +134,7 @@ function clock() {
     var m = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
     var s = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
     document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
+    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 setInterval(clock, 1000); clock();
 
@@ -157,10 +167,10 @@ function refreshZmanim() {
         
         var p = jcal.getParshah();
         if (p && p.length > 0) document.getElementById('PARSHA_LABEL').innerText = p.map(function(i){return parshas[i];}).join("-");
-
+        
         var rc = document.getElementById('RC_NOTICE');
         rc.style.display = jcal.isRoshChodesh() ? "block" : "none";
-
+        
         var omerDay = jcal.getDayOfOmer();
         if (omerDay > 0) document.getElementById('O2').innerText = getFullHebrewOmer(omerDay);
 
