@@ -45,12 +45,11 @@
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
   
-  /* Adjusted font for 12 rows */
   .z-label { color: var(--gold); font-size: 2.3vh; }
   .z-time { color: white; font-size: 2.3vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
   
-  /* Special styling for Candle Lighting */
-  .candle-row { background: #1a1a00; }
+  /* Shared Gold Highlight for Candle Lighting and Rabbeinu Tam */
+  .highlight-row { background: #2b2400; }
 
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row { height: 48%; display: flex; gap: 12px; }
@@ -94,9 +93,12 @@
         <div class="z-row"><span class="z-label">חצות</span><span class="z-time" id="z7">12:54</span></div>
         <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">1:29</span></div>
         <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">6:17</span></div>
-        <div class="z-row candle-row"><span class="z-label">הדלקת נרות</span><span class="z-time" id="z12" style="color:#FFD700;">7:21</span></div>
+        
+        <div class="z-row highlight-row"><span class="z-label">הדלקת נרות</span><span class="z-time" id="z12" style="color:#FFD700;">7:21</span></div>
+        
         <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">7:39</span></div>
-        <div class="z-row"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">8:52</span></div>
+        
+        <div class="z-row highlight-row"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11" style="color:#FFD700;">8:52</span></div>
     </div>
 
     <div class="content-col">
@@ -175,7 +177,6 @@ function refreshZmanim() {
         var omerDay = jcal.getDayOfOmer();
         if (omerDay > 0) document.getElementById('O2').innerText = getFullHebrewOmer(omerDay);
 
-        // Calculate 12 Times including Candle Lighting
         var times = [
             cal.getAlos16Point1Degrees(), cal.getMisheyakir11Degrees(), cal.getSunrise(), 
             cal.getSofZmanShmaMGA(), cal.getSofZmanShmaGRA(), cal.getSofZmanTfilaGRA(), 
@@ -183,12 +184,10 @@ function refreshZmanim() {
             cal.getSunset(), cal.getTzais72(), cal.getCandleLighting()
         ];
         
-        // Update Z1 through Z11
         for(var i=1; i<=11; i++) {
             var t = new Date(times[i-1]);
             document.getElementById('z'+i).innerHTML = (t.getHours()%12||12) + ":" + (t.getMinutes()<10?'0':'')+t.getMinutes();
         }
-        // Update Candle Lighting specifically
         var cl = new Date(times[11]);
         document.getElementById('z12').innerHTML = (cl.getHours()%12||12) + ":" + (cl.getMinutes()<10?'0':'')+cl.getMinutes();
 
