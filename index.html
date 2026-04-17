@@ -48,8 +48,10 @@
   .z-label { color: var(--gold); font-size: 2.3vh; }
   .z-time { color: white; font-size: 2.3vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
   
-  /* Shared Gold Highlight for Candle Lighting and Rabbeinu Tam */
-  .highlight-row { background: #2b2400; }
+  /* Highlight for Start (Candles) */
+  .candle-row { background: #2b2400; }
+  /* Highlight for End (72) */
+  .rt-row { background: #2b2400; }
 
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row { height: 48%; display: flex; gap: 12px; }
@@ -94,11 +96,11 @@
         <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">1:29</span></div>
         <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">6:17</span></div>
         
-        <div class="z-row highlight-row"><span class="z-label">הדלקת נרות</span><span class="z-time" id="z12" style="color:#FFD700;">7:21</span></div>
+        <div class="z-row candle-row"><span class="z-label">הדלקת נרות</span><span class="z-time" id="z12" style="color:#FFD700;">7:21</span></div>
         
         <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">7:39</span></div>
         
-        <div class="z-row highlight-row"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11" style="color:#FFD700;">8:52</span></div>
+        <div class="z-row rt-row"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11" style="color:#FFD700;">8:52</span></div>
     </div>
 
     <div class="content-col">
@@ -115,7 +117,7 @@
         <div class="small-img-container"><img id="p4" style="width:100%; height:100%; object-fit:contain;"></div>
         <div class="omer-box">
             <div style="font-size:3vh; color:white; margin-bottom:5px;">ספירת העומר</div>
-            <div id="O2" style="font-size:2.8vh; color:var(--gold); line-height: 1.1;">היום חמישה עשר יום לעומר</div>
+            <div id="O2" style="font-size:2.8vh; color:var(--gold); line-height: 1.1;">היום חמישה עשר יום שהם שני שבועות ויום אחד לעומר</div>
         </div>
         <div class="small-img-container"><img id="p5" style="width:100%; height:100%; object-fit:contain;"></div>
       </div>
@@ -159,6 +161,8 @@ function getFullHebrewOmer(day) {
     return text + " לעומר";
 }
 
+var parshas = ["בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקתי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פנחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה"];
+
 function refreshZmanim() {
     if (typeof KosherZmanim === 'undefined') return;
     try {
@@ -171,6 +175,9 @@ function refreshZmanim() {
 
         document.getElementById('DAY_LABEL').innerText = ["יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "ערב שבת קודש", "שבת קודש"][jcal.getDayOfWeek() - 1];
         document.getElementById('DATE_LABEL').innerText = jcal.getJewishDayOfMonth() + " " + ["ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב"][jcal.getJewishMonth()-1] + " תשפ\"ו";
+        
+        var p = jcal.getParshah();
+        if (p && p.length > 0) document.getElementById('PARSHA_LABEL').innerText = p.map(function(i){return parshas[i];}).join("-");
         
         var rc = document.getElementById('RC_NOTICE');
         rc.style.display = jcal.isRoshChodesh() ? "block" : "none";
