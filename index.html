@@ -100,7 +100,7 @@
         
         <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">7:39</span></div>
         
-        <div class="z-row rt-row"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11" style="color:#FFD700;">8:52</span></div>
+        <div class="z-row rt-row"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11" style="color:#FFD700;">8:51</span></div>
     </div>
 
     <div class="content-col">
@@ -188,7 +188,7 @@ function refreshZmanim() {
             cal.getAlos16Point1Degrees(), cal.getMisheyakir11Degrees(), cal.getSunrise(), 
             cal.getSofZmanShmaMGA(), cal.getSofZmanShmaGRA(), cal.getSofZmanTfilaGRA(), 
             cal.getChatzos(), cal.getMinchaGedola(), cal.getPlagHamincha(), 
-            cal.getSunset(), cal.getTzais72(), cal.getCandleLighting()
+            cal.getSunset(), new Date(cal.getTzais72().getTime() - 60000), cal.getCandleLighting()
         ];
         
         for(var i=1; i<=11; i++) {
