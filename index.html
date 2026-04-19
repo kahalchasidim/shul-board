@@ -42,20 +42,19 @@
     align-items: center; 
     justify-content: center; 
     
-    /* 1. Make the font match the box height (18vh) */
-    font-size: 18vh;      
-    
-    /* 2. Remove the invisible gap above/below the numbers */
-    line-height: 0.8;    
-    
+    font-size: 19vh;      /* Bumped up slightly to "overflow" the height */
+    line-height: 1;      
     font-weight: 800; 
     color: white; 
     font-family: 'Assistant', sans-serif; 
     
-    /* 3. Optional: make the numbers look extra bold and tall */
-    transform: scaleY(1.1); 
+    /* THE FIXES: */
+    transform: scaleY(1.2) translateY(-2%); 
+    /* scaleY stretches it vertically */
+    /* translateY(-2%) nudges it UP towards the top border */
+    
+    margin-top: -5px;    /* A physical nudge to help the top touch */
   }
-
   .left-stack {
     flex: 2;                /* Increased from 1.5 to 2 */
     text-align: center; 
