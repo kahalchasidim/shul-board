@@ -23,15 +23,27 @@
   .z-time { color: white; font-size: 3.2vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 3px; }
- .data-box span { 
-    font-size: 6vh; 
-    line-height: 1; 
+.data-box { 
+    flex: 1.2; 
+    border: 2px solid var(--gold); 
+    border-radius: 10px; 
+    background: #080808; 
+    display: flex; 
+    align-items: center;      /* Centers text vertically */
+    justify-content: center; 
+    text-align: center; 
+    overflow: hidden; 
+    padding: 4px;             /* A tiny bit of safety padding */
+    height: 100%;             /* CRITICAL: Keeps the box from growing */
+    position: relative;
+  }
+
+  .data-box span { 
     width: 100%; 
-    display: block; 
+    display: block;           /* Forces it to behave like a block for the script */
     word-wrap: break-word; 
+    line-height: 1.1;         /* Slightly more breathing room for long text */
     font-weight: 800;
-    max-height: 100%; /* Keeps text from growing the box */
   }
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; display: flex; flex: 1.5; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; }
@@ -114,9 +126,11 @@ function loadData() {
                 ann.innerText = d.announcements || "";
                 tef.innerText = d.tefila || "";
                 
-                // RUN THE SHRINKER
-                fitText(ann);
-                fitText(tef);
+                // Give the browser 100ms to "render" before shrinking
+                setTimeout(function() {
+                    fitText(ann);
+                    fitText(tef);
+                }, 100);
 
                 if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
                 if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
@@ -171,11 +185,14 @@ var waiter = setInterval(function() {
     }
 }, 3000);
 function fitText(el) {
-    var fontSize = 6; // The max size we want
+    // 1. Start with a reasonable max size
+    var fontSize = 6.5; 
     el.style.fontSize = fontSize + "vh";
-    // If the text is taller than the box, shrink the font until it fits
-    while (el.scrollHeight > el.parentElement.clientHeight && fontSize > 2) {
-        fontSize -= 0.2;
+
+    // 2. The Loop: Shrink until it fits or hits the floor (1.5vh)
+    // We check offsetHeight vs parentHeight to be 100% sure
+    while (el.offsetHeight > el.parentElement.clientHeight && fontSize > 1.5) {
+        fontSize -= 0.1; // Shrink in tiny steps for a perfect fit
         el.style.fontSize = fontSize + "vh";
     }
 }
