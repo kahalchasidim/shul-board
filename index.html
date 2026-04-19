@@ -24,7 +24,15 @@
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 3px; }
-  .data-box span { font-size: 6vh; line-height: 1; width: 100%; display: block; word-wrap: break-word; font-weight: 800; }
+ .data-box span { 
+    font-size: 6vh; 
+    line-height: 1; 
+    width: 100%; 
+    display: block; 
+    word-wrap: break-word; 
+    font-weight: 800;
+    max-height: 100%; /* Keeps text from growing the box */
+  }
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; display: flex; flex: 1.5; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; }
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -98,10 +106,18 @@ function loadData() {
     x.open("GET", SCRIPT_URL, true);
     x.onreadystatechange = function() {
         if (x.readyState == 4 && x.status == 200) {
-            try {
+           try {
                 var d = JSON.parse(x.responseText);
-                document.getElementById('ANN').innerText = d.announcements || "";
-                document.getElementById('TEF').innerText = d.tefila || "";
+                var ann = document.getElementById('ANN');
+                var tef = document.getElementById('TEF');
+                
+                ann.innerText = d.announcements || "";
+                tef.innerText = d.tefila || "";
+                
+                // RUN THE SHRINKER
+                fitText(ann);
+                fitText(tef);
+
                 if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
                 if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
                 if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
@@ -154,6 +170,15 @@ var waiter = setInterval(function() {
         refreshZmanim(); setInterval(refreshZmanim, 60000);
     }
 }, 3000);
+function fitText(el) {
+    var fontSize = 6; // The max size we want
+    el.style.fontSize = fontSize + "vh";
+    // If the text is taller than the box, shrink the font until it fits
+    while (el.scrollHeight > el.parentElement.clientHeight && fontSize > 2) {
+        fontSize -= 0.2;
+        el.style.fontSize = fontSize + "vh";
+    }
+}
 </script>
 </body>
 </html>
