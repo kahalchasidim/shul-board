@@ -35,17 +35,25 @@
     background: #050505;
   }
 
-  .main-clock { 
-    flex: 3;                /* Decreased from 4 to 3 */
+.main-clock { 
+    flex: 3; 
     height: 100%; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    font-size: 15vh;        /* Dropped slightly to ensure it fits the narrower area */
+    
+    /* 1. Make the font match the box height (18vh) */
+    font-size: 18vh;      
+    
+    /* 2. Remove the invisible gap above/below the numbers */
+    line-height: 0.8;    
+    
     font-weight: 800; 
     color: white; 
-    line-height: 1; 
     font-family: 'Assistant', sans-serif; 
+    
+    /* 3. Optional: make the numbers look extra bold and tall */
+    transform: scaleY(1.1); 
   }
 
   .left-stack {
