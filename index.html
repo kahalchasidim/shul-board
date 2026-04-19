@@ -13,39 +13,50 @@
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
   #BSD { right: 15px; } #ENG_DATE { left: 15px; }
- .clock-section { 
-    height: 16vh; 
+.clock-section { 
+    height: 18vh;           /* Slightly taller to allow a bigger clock font */
     display: flex; 
-    align-items: stretch; /* Forces children to fill height */
+    align-items: stretch; 
     justify-content: space-between; 
     border: 2px solid var(--gold); 
     border-radius: 12px; 
-    padding: 0;           /* Removed the 20px padding */
+    padding: 0; 
     overflow: hidden;
   }
 
   .status-stack { 
     flex: 1.5; 
     text-align: center; 
-    border-left: 1px solid #333; 
-    height: 100%;         /* Filled the full height */
+    border-left: 1px solid #333; /* Divider line on the right of the clock */
+    height: 100%; 
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
-    background: #050505;  /* Subtle background to make it solid */
+    background: #050505;
   }
 
   .main-clock { 
-    flex: 3; 
-    height: 100%;         /* Filled the full height */
+    flex: 4;                /* Clock takes 4 units of space (the widest part) */
+    height: 100%; 
     display: flex; 
-    align-items: center;  /* Centers time vertically */
+    align-items: center; 
     justify-content: center; 
-    font-size: 15vh; 
+    font-size: 16vh;        /* Clock is now huge */
     font-weight: 800; 
     color: white; 
     line-height: 1; 
     font-family: 'Assistant', sans-serif; 
+  }
+
+  .left-stack {
+    flex: 1.5;
+    text-align: center;
+    border-right: 1px solid #333; /* Divider line on the left of the clock */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #050505;
   }
   .main-body { height: 72vh; display: flex; gap: 12px; }
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
@@ -69,15 +80,22 @@
     <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
     <div id="BSD">בס"ד</div> 
   </div>
-  <div class="clock-section">
+<div class="clock-section">
     <div class="status-stack">
         <div id="DAY_LABEL" style="font-size:4.5vh;">יום ראשון</div>
         <div id="DATE_LABEL" style="font-size:3vh; color:var(--gold);">ב׳ אייר תשפ״ו</div>
         <div id="PARSHA_LABEL" style="font-size: 3vh; color: #ccc;">פרשת אחרי מות - קדושים</div>
         <div id="RC_NOTICE">ראש חודש</div>
     </div>
+
     <div class="main-clock" id="CLOCK">00:00:00</div>
-  </div>
+
+    <div class="left-stack">
+        <div id="L_TOP" style="font-size:4.5vh; color:var(--gold);">ברוכים הבאים</div>
+        <div id="L_MID" style="font-size:3vh;">קהל חסידים</div>
+        <div id="L_BOT" style="font-size:3vh; color:#888;">ד'בעיסוואטער</div>
+    </div>
+</div>
   <div class="main-body">
     <div class="zemanim-col">
         <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">4:44</span></div>
