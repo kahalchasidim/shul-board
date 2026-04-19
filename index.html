@@ -14,21 +14,20 @@
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
   #BSD { right: 15px; } #ENG_DATE { left: 15px; }
   .clock-section { height: 16vh; display: flex; align-items: center; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; padding: 0 20px; }
-  .status-stack { flex: 3; text-align: center; border-left: 1px solid #333; height: 90%; display: flex; flex-direction: column; justify-content: center; }
-  .main-clock { flex: 2.2; text-align: center; font-size: 15vh; font-weight: 800; color: white; line-height: 1; font-family: 'Assistant', sans-serif; }
+  .status-stack { flex: 1.5; text-align: center; border-left: 1px solid #333; height: 90%; display: flex; flex-direction: column; justify-content: center; }
+  .main-clock { flex: 3; text-align: center; font-size: 15vh; font-weight: 800; color: white; line-height: 1; font-family: 'Assistant', sans-serif; }
   .main-body { height: 72vh; display: flex; gap: 12px; }
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
-  .z-label { color: var(--gold); font-size: 3.5vh; }
-  .z-time { color: white; font-size: 3.5vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
+  .z-label { color: var(--gold); font-size: 3.2vh; }
+  .z-time { color: white; font-size: 3.2vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-.data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 5px; }
-.img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; display: flex; flex: 1.5; }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 3px; }
+  .data-box span { font-size: 6vh; line-height: 1; width: 100%; display: block; word-wrap: break-word; font-weight: 800; }
+  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; display: flex; flex: 1.5; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; }
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-  
-  /* FIXED: Changed display to none so it only shows when active */
   #RC_NOTICE { color: #fff; background: #8b0000; padding: 4px 15px; border-radius: 6px; font-size: 2.2vh; margin-top: 5px; display: none; }
 </style>
 </head>
@@ -73,7 +72,7 @@
         <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
         <div class="omer-box">
             <div style="font-size:4vh; color:white; margin-bottom:5px;">ספירת העומר</div>
-            <div id="O2" style="font-size:4.5vh; color:var(--gold); padding:0 10px;">היום שבעה עשר יום שהם שני שבועות ושלושה ימים לעומר</div>
+            <div id="O2" style="font-size:4.2vh; color:var(--gold); padding:0 10px;">היום שבעה עשר יום שהם שני שבועות ושלושה ימים לעומר</div>
         </div>
         <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
       </div>
@@ -119,34 +118,31 @@ function refreshZmanim() {
         var loc = new KosherZmanim.GeoLocation("Bayswater", 40.59, -73.76, 0, "America/New_York");
         var cal = new KosherZmanim.ComplexZmanimCalendar(loc);
         var now = new Date();
-        if (now.getHours() >= 21) { now.setDate(now.getDate() + 1); }
+        
+        if (now.getHours() > 20 || (now.getHours() == 20 && now.getMinutes() >= 26)) { 
+            now.setDate(now.getDate() + 1); 
+        }
+        
         cal.setDate(now);
         var jcal = new KosherZmanim.JewishCalendar(now);
         
-        // DYNAMIC RC SIGN logic
         document.getElementById('RC_NOTICE').style.display = jcal.isRoshChodesh() ? "block" : "none";
-
         document.getElementById('DAY_LABEL').innerText = ["יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "ערב שבת קודש", "שבת קודש"][jcal.getDayOfWeek() - 1];
         document.getElementById('DATE_LABEL').innerText = jcal.getJewishDayOfMonth() + " " + ["ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב"][jcal.getJewishMonth()-1] + " תשפ\"ו";
 
-// Add this for the Parsha
-        var parshasList = ["בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקתי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פנחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה"];
-        var p = jcal.getParshah();
-        if (p && p.length > 0) {
-            document.getElementById('PARSHA_LABEL').innerText = "פרשת " + p.map(function(i){return parshasList[i];}).join("-");
+        var omerCount = jcal.getOmer();
+        if (omerCount > 0) {
+            var weeks = Math.floor(omerCount / 7), days = omerCount % 7;
+            var omerText = "היום " + omerCount + " יום";
+            if (weeks > 0) { omerText += " שהם " + weeks + " שבועות"; if (days > 0) omerText += " ו" + days + " ימים"; }
+            document.getElementById('O2').innerText = omerText + " לעומר";
         }
-        
-        var z1 = cal.getAlos16Point1Degrees(), z2 = cal.getMisheyakir11Degrees(), z3 = cal.getSunrise();
-        var z4 = cal.getSofZmanShmaMGA(), z5 = cal.getSofZmanShmaGRA(), z6 = cal.getSofZmanTfilaGRA();
-        var z7 = cal.getChatzos(), z8 = cal.getMinchaGedola(), z9 = cal.getPlagHamincha();
-        var z10 = cal.getCandleLighting(), z11 = cal.getSunset(), z12 = cal.getTzais72();
 
-        var list = [z1,z2,z3,z4,z5,z6,z7,z8,z9,z10,z11,z12];
+        var list = [cal.getAlos16Point1Degrees(), cal.getMisheyakir11Degrees(), cal.getSunrise(), cal.getSofZmanShmaMGA(), cal.getSofZmanShmaGRA(), cal.getSofZmanTfilaGRA(), cal.getChatzos(), cal.getMinchaGedola(), cal.getPlagHamincha(), cal.getCandleLighting(), cal.getSunset(), cal.getTzais72()];
         for(var i=0; i<12; i++) {
             if(list[i]) {
                 var d = new Date(list[i]);
-                var ts = (d.getHours()%12||12)+":"+(d.getMinutes()<10?'0':'')+d.getMinutes();
-                document.getElementById('z'+(i+1)).innerText = ts;
+                document.getElementById('z'+(i+1)).innerText = (d.getHours()%12||12)+":"+(d.getMinutes()<10?'0':'')+d.getMinutes();
             }
         }
     } catch(e) {}
@@ -157,7 +153,7 @@ var waiter = setInterval(function() {
         clearInterval(waiter);
         refreshZmanim(); setInterval(refreshZmanim, 60000);
     }
-}, 2000);
+}, 3000);
 </script>
 </body>
 </html>
