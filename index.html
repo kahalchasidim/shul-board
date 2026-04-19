@@ -23,28 +23,8 @@
   .z-time { color: white; font-size: 3.2vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-.data-box { 
-    flex: 1.2; 
-    border: 2px solid var(--gold); 
-    border-radius: 10px; 
-    background: #080808; 
-    display: flex; 
-    align-items: center;      /* Centers text vertically */
-    justify-content: center; 
-    text-align: center; 
-    overflow: hidden; 
-    padding: 4px;             /* A tiny bit of safety padding */
-    height: 100%;             /* CRITICAL: Keeps the box from growing */
-    position: relative;
-  }
-
-  .data-box span { 
-    width: 100%; 
-    display: block;           /* Forces it to behave like a block for the script */
-    word-wrap: break-word; 
-    line-height: 1.1;         /* Slightly more breathing room for long text */
-    font-weight: 800;
-  }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 4px; height: 100%; position: relative; }
+  .data-box span { width: 100%; display: block; word-wrap: break-word; line-height: 1.1; font-weight: 800; }
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; display: flex; flex: 1.5; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; }
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -122,16 +102,9 @@ function loadData() {
                 var d = JSON.parse(x.responseText);
                 var ann = document.getElementById('ANN');
                 var tef = document.getElementById('TEF');
-                
                 ann.innerText = d.announcements || "";
                 tef.innerText = d.tefila || "";
-                
-                // Give the browser 100ms to "render" before shrinking
-                setTimeout(function() {
-                    fitText(ann);
-                    fitText(tef);
-                }, 100);
-
+                setTimeout(function() { fitText(ann); fitText(tef); }, 100);
                 if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
                 if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
                 if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
@@ -149,7 +122,7 @@ function refreshZmanim() {
         var cal = new KosherZmanim.ComplexZmanimCalendar(loc);
         var now = new Date();
         
-        // Flip at 8:26 PM
+        // Date Flip Logic
         if (now.getHours() > 20 || (now.getHours() == 20 && now.getMinutes() >= 26)) { 
             now.setDate(now.getDate() + 1); 
         }
@@ -157,59 +130,66 @@ function refreshZmanim() {
         cal.setDate(now);
         var jcal = new KosherZmanim.JewishCalendar(now);
         
+        // Update Labels
         document.getElementById('RC_NOTICE').style.display = jcal.isRoshChodesh() ? "block" : "none";
         document.getElementById('DAY_LABEL').innerText = ["יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "ערב שבת קודש", "שבת קודש"][jcal.getDayOfWeek() - 1];
         document.getElementById('DATE_LABEL').innerText = jcal.getJewishDayOfMonth() + " " + ["ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב"][jcal.getJewishMonth()-1] + " תשפ\"ו";
 
-        // FULL HEBREW OMER MAPPING
+        // Parsha
+        var parshasList = ["בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקתי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פנחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה"];
+        var p = jcal.getParshah();
+        if (p && p.length > 0) {
+            document.getElementById('PARSHA_LABEL').innerText = "פרשת " + p.map(function(i){return parshasList[i];}).join("-");
+        }
+
+        // Omer Words
         var omerCount = jcal.getOmer();
         if (omerCount > 0) {
             var hDays = ["", "יום אחד", "שני ימים", "שלושה ימים", "ארבעה ימים", "חמישה ימים", "שישה ימים", "שבעה ימים", "שמונה ימים", "תשעה ימים", "עשרה ימים", "אחד עשר יום", "שנים עשר יום", "שלושה עשר יום", "ארבעה עשר יום", "חמישה עשר יום", "שישה עשר יום", "שבעה עשר יום", "שמונה עשר יום", "תשעה עשר יום", "עשרים יום", "אחד ועשרים יום", "שניים ועשרים יום", "שלושה ועשרים יום", "ארבעה ועשרים יום", "חמישה ועשרים יום", "שישה ועשרים יום", "שבעה ועשרים יום", "שמונה ועשרים יום", "תשעה ועשרים יום", "שלושים יום", "אחד ושלושים יום", "שניים ושלושים יום", "שלושה ושלושים יום", "ארבעה ושלושים יום", "חמישה ושלושים יום", "שישה ושלושים יום", "שבעה ושלושים יום", "שמונה ושלושים יום", "תשעה ושלושים יום", "ארבעים יום", "אחד וארבעים יום", "שניים וארבעים יום", "שלושה וארבעים יום", "ארבעה וארבעים יום", "חמישה וארבעים יום", "שישה וארבעים יום", "שבעה וארבעים יום", "שמונה וארבעים יום", "תשעה וארבעים יום"];
             var hWeeks = ["", "שבוע אחד", "שני שבועות", "שלושה שבועות", "ארבעה שבועות", "חמישה שבועות", "שישה שבועות"];
             var hRem = ["", "ויום אחד", "ושני ימים", "ושלושה ימים", "וארבעה ימים", "וחמישה ימים", "ושישה ימים"];
-            
-            var weeks = Math.floor(omerCount / 7);
-            var days = omerCount % 7;
+            var weeks = Math.floor(omerCount / 7), days = omerCount % 7;
             var omerText = "היום " + hDays[omerCount];
-            
-            if (weeks > 0) {
-                omerText += " שהם " + hWeeks[weeks];
-                if (days > 0) omerText += " " + hRem[days];
+            if (weeks > 0) { 
+                omerText += " שהם " + hWeeks[weeks]; 
+                if (days > 0) omerText += " " + hRem[days]; 
             }
             document.getElementById('O2').innerText = omerText + " לעומר";
-        } else {
-            document.getElementById('O2').innerText = "";
         }
 
-        // ZMANIM LIST
-        var list = [cal.getAlos16Point1Degrees(), cal.getMisheyakir11Degrees(), cal.getSunrise(), cal.getSofZmanShmaMGA(), cal.getSofZmanShmaGRA(), cal.getSofZmanTfilaGRA(), cal.getChatzos(), cal.getMinchaGedola(), cal.getPlagHamincha(), cal.getCandleLighting(), cal.getSunset(), cal.getTzais72()];
+        // Zmanim Calculations
+        var list = [
+            cal.getAlos16Point1Degrees(), cal.getMisheyakir11Degrees(), cal.getSunrise(),
+            cal.getSofZmanShmaMGA(), cal.getSofZmanShmaGRA(), cal.getSofZmanTfilaGRA(),
+            cal.getChatzos(), cal.getMinchaGedola(), cal.getPlagHamincha(),
+            cal.getCandleLighting(), cal.getSunset(), cal.getTzais72()
+        ];
+        
         for(var i=0; i<12; i++) {
             if(list[i]) {
                 var d = new Date(list[i]);
-                document.getElementById('z'+(i+1)).innerText = (d.getHours()%12||12)+":"+(d.getMinutes()<10?'0':'')+d.getMinutes();
+                var hr = d.getHours() % 12 || 12;
+                var mn = d.getMinutes();
+                document.getElementById('z' + (i+1)).innerText = hr + ":" + (mn < 10 ? '0' : '') + mn;
             }
         }
-    } catch(e) {}
+    } catch(e) { console.error(e); }
+}
+
+function fitText(el) {
+    var fontSize = 6.5; el.style.fontSize = fontSize + "vh";
+    while (el.offsetHeight > el.parentElement.clientHeight && fontSize > 1.5) {
+        fontSize -= 0.1; el.style.fontSize = fontSize + "vh";
+    }
 }
 
 var waiter = setInterval(function() {
     if (typeof KosherZmanim !== 'undefined') {
         clearInterval(waiter);
-        refreshZmanim(); setInterval(refreshZmanim, 60000);
+        refreshZmanim(); 
+        setInterval(refreshZmanim, 60000);
     }
-}, 3000);
-function fitText(el) {
-    // 1. Start with a reasonable max size
-    var fontSize = 6.5; 
-    el.style.fontSize = fontSize + "vh";
-
-    // 2. The Loop: Shrink until it fits or hits the floor (1.5vh)
-    // We check offsetHeight vs parentHeight to be 100% sure
-    while (el.offsetHeight > el.parentElement.clientHeight && fontSize > 1.5) {
-        fontSize -= 0.1; // Shrink in tiny steps for a perfect fit
-        el.style.fontSize = fontSize + "vh";
-    }
-}
+}, 2000);
 </script>
 </body>
 </html>
