@@ -10,24 +10,87 @@
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
   body { background: #000; color: #fff; font-family: 'Suez One', serif; width: 100vw; height: 100vh; }
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
+  
+  /* Branding Bar */
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
   #BSD { right: 15px; } #ENG_DATE { left: 15px; }
-  
+
+  /* Top Clock Section */
   .clock-section { height: 18vh; display: flex; align-items: stretch; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; padding: 0; overflow: hidden; }
-  .status-stack, .left-stack { flex: 2; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; background: #050505; padding: 5px; }
+  .status-stack, .left-stack { 
+    flex: 2; 
+    text-align: center; 
+    border-right: 1px solid #333; 
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    /* This centers the content perfectly between the top and bottom gold lines */
+    justify-content: center; 
+    background: #050505;
+    padding: 0; 
+  }
   .status-stack { border-left: 1px solid #333; }
   .left-stack { border-right: 1px solid #333; }
-  .main-clock { flex: 3; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 19vh; line-height: 1; font-weight: 800; color: white; font-family: 'Assistant', sans-serif; transform: scaleY(1.2) translateY(-2%); margin-top: -5px; }
 
-  #RC_NOTICE_LEFT { color: #fff; background: #8b0000; padding: 6px 15px; border-radius: 6px; font-size: 3.5vh; margin-top: 5px; display: none; font-weight: 800; }
-  #TACHANUN_NOTICE { color: #fff; background: #004d40; padding: 6px 15px; border-radius: 6px; font-size: 3.5vh; margin-top: 5px; display: none; font-weight: 800; }
+  .main-clock { 
+    flex: 3; height: 100%; display: flex; align-items: center; justify-content: center; 
+    font-size: 19vh; line-height: 1; font-weight: 800; color: white; 
+    font-family: 'Assistant', sans-serif; transform: scaleY(1.2) translateY(-2%); margin-top: -5px; 
+  }
 
+/* Notification Styles - Clean & Full Width */
+  .notice-box { 
+    width: 100%;           /* Fills the entire side panel */
+    text-align: center; 
+    font-weight: 800; 
+    padding: 10px 0;      /* Vertical spacing only */
+  }
+
+  /* Keep the backgrounds for Rosh Chodesh/Tachanun alerts to make them pop */
+  #RC_NOTICE_LEFT { 
+    background: #8b0000; 
+    color: white; 
+    font-size: 4.5vh; 
+    display: none; 
+  }
+
+  #TACHANUN_NOTICE { 
+    background: #004d40; 
+    color: white; 
+    font-size: 4.5vh; 
+    display: none; 
+  }
+
+  /* Completely transparent, full-width Tefilla alerts */
+ #TEFILLA_ALERTS { 
+    display: block; 
+    background: transparent; 
+    border: none;
+    color: var(--gold); 
+    /* REMOVED the transform nudge that pushed it too high */
+    transform: none; 
+  }
+
+  #T_MORID { 
+    font-size: 4.8vh; /* Slightly larger for a bold look */
+    line-height: 1.1; /* Standard spacing to prevent squashing */
+  }
+
+  #T_BERACHA { 
+    font-size: 4vh; 
+    color: white; 
+    line-height: 1.1; 
+    margin-top: 4px; /* A small natural gap between the two lines */
+  }
+
+  /* Main Body Layout */
   .main-body { height: 72vh; display: flex; gap: 12px; }
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
   .z-label { color: var(--gold); font-size: 3.2vh; }
   .z-time { color: white; font-size: 3.2vh; font-family: 'Assistant', sans-serif; font-weight: 800; }
+
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 4px; height: 100%; position: relative; }
@@ -50,14 +113,19 @@
         <div id="DATE_LABEL" style="font-size:4vh; color:var(--gold);">ב׳ אייר תשפ״ו</div>
         <div id="PARSHA_LABEL" style="font-size: 4vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
     </div>
+
     <div class="main-clock" id="CLOCK">00:00:00</div>
+
     <div class="left-stack">
-        <div id="L_TOP" style="font-size:4vh; color:var(--gold);">ברוכים הבאים</div>
-        <div id="L_MID" style="font-size:4vh;">קהל חסידים</div>
-        <div id="RC_NOTICE_LEFT">ראש חודש</div>
-        <div id="TACHANUN_NOTICE">אין תחנון</div>
+        <div id="RC_NOTICE_LEFT" class="notice-box">ראש חודש</div>
+        <div id="TACHANUN_NOTICE" class="notice-box">אין תחנון</div>
+        <div id="TEFILLA_ALERTS" class="notice-box">
+            <div id="T_MORID">מוריד הטל</div>
+            <div id="T_BERACHA" style="margin-top: 5px;">ותן ברכה</div>
+        </div>
     </div>
   </div>
+
   <div class="main-body">
     <div class="zemanim-col">
         <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">4:44</span></div>
@@ -132,7 +200,6 @@ function refreshZmanim() {
         var loc = new KosherZmanim.GeoLocation("Bayswater", 40.59, -73.76, 0, "America/New_York");
         var cal = new KosherZmanim.ComplexZmanimCalendar(loc);
         var now = new Date();
-        // FLIP AT 8:26 PM
         if (now.getHours() > 20 || (now.getHours() == 20 && now.getMinutes() >= 26)) { now.setDate(now.getDate() + 1); }
         cal.setDate(now);
         var jcal = new KosherZmanim.JewishCalendar(now);
@@ -140,23 +207,42 @@ function refreshZmanim() {
         document.getElementById('DAY_LABEL').innerText = ["יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "ערב שבת קודש", "שבת קודש"][jcal.getDayOfWeek() - 1];
         document.getElementById('DATE_LABEL').innerText = jcal.getJewishDayOfMonth() + " " + ["ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב"][jcal.getJewishMonth()-1] + " תשפ\"ו";
 
-        var parshasList = ["בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקתי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פנחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה"];
         var p = jcal.getParshah();
-        if (p && p.length > 0) { document.getElementById('PARSHA_LABEL').innerText = "פרשת " + p.map(function(i){return parshasList[i];}).join("-"); }
-
-        var isRC = jcal.isRoshChodesh();
-        var noTachanun = !jcal.isTachnun();
-        document.getElementById('RC_NOTICE_LEFT').style.display = isRC ? "block" : "none";
-        document.getElementById('TACHANUN_NOTICE').style.display = noTachanun ? "block" : "none";
-        
-        if (isRC || noTachanun) {
-            document.getElementById('L_TOP').style.fontSize = "3vh";
-            document.getElementById('L_MID').style.display = "none";
-        } else {
-            document.getElementById('L_TOP').style.fontSize = "4vh";
-            document.getElementById('L_MID').style.display = "block";
+        if (p && p.length > 0) {
+            var parshasList = ["בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים", "אמור", "בהר", "בחוקתי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק", "פנחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "נצבים", "וילך", "האזינו", "וזאת הברכה"];
+            document.getElementById('PARSHA_LABEL').innerText = "פרשת " + p.map(function(i){return parshasList[i];}).join("-");
         }
 
+        // --- ALERTS LOGIC ---
+        var isRC = jcal.isRoshChodesh();
+        var noTachanun = !jcal.isTachnun();
+        var month = jcal.getJewishMonth();
+        var day = jcal.getJewishDayOfMonth();
+
+        // Morid HaTal vs Mashiv HaRuach
+        var isMashiv = (month == 7 && day >= 22) || (month > 7) || (month == 1 && day < 15);
+        document.getElementById('T_MORID').innerText = isMashiv ? "משיב הרוח" : "מוריד הטל";
+
+        // V'sein Beracha vs Tal U'Matar
+        var isSummer = (month >= 1 && month < 9); 
+        document.getElementById('T_BERACHA').innerText = isSummer ? "ותן ברכה" : "ותן טל ומטר";
+
+        // PRIORITY DISPLAY
+        if (isRC) {
+            document.getElementById('RC_NOTICE_LEFT').style.display = "block";
+            document.getElementById('TACHANUN_NOTICE').style.display = "none";
+            document.getElementById('TEFILLA_ALERTS').style.display = "none";
+        } else if (noTachanun) {
+            document.getElementById('RC_NOTICE_LEFT').style.display = "none";
+            document.getElementById('TACHANUN_NOTICE').style.display = "block";
+            document.getElementById('TEFILLA_ALERTS').style.display = "none";
+        } else {
+            document.getElementById('RC_NOTICE_LEFT').style.display = "none";
+            document.getElementById('TACHANUN_NOTICE').style.display = "none";
+            document.getElementById('TEFILLA_ALERTS').style.display = "block";
+        }
+
+        // Omer Logic
         var omerCount = jcal.getOmer();
         if (omerCount > 0) {
             var hDays = ["", "יום אחד", "שני ימים", "שלושה ימים", "ארבעה ימים", "חמישה ימים", "שישה ימים", "שבעה ימים", "שמונה ימים", "תשעה ימים", "עשרה ימים", "אחד עשר יום", "שנים עשר יום", "שלושה עשר יום", "ארבעה עשר יום", "חמישה עשר יום", "שישה עשר יום", "שבעה עשר יום", "שמונה עשר יום", "תשעה עשר יום", "עשרים יום", "אחד ועשרים יום", "שניים ועשרים יום", "שלושה ועשרים יום", "ארבעה ועשרים יום", "חמישה ועשרים יום", "שישה ועשרים יום", "שבעה ועשרים יום", "שמונה ועשרים יום", "תשעה ועשרים יום", "שלושים יום", "אחד ושלושים יום", "שניים ושלושים יום", "שלושה ושלושים יום", "ארבעה ושלושים יום", "חמישה ושלושים יום", "שישה ושלושים יום", "שבעה ושלושים יום", "שמונה ושלושים יום", "תשעה ושלושים יום", "ארבעים יום", "אחד וארבעים יום", "שניים וארבעים יום", "שלושה וארבעים יום", "ארבעה וארבעים יום", "חמישה וארבעים יום", "שישה וארבעים יום", "שבעה וארבעים יום", "שמונה וארבעים יום", "תשעה וארבעים יום"];
@@ -166,8 +252,9 @@ function refreshZmanim() {
             var omerText = "היום " + hDays[omerCount];
             if (weeks > 0) { omerText += " שהם " + hWeeks[weeks]; if (days > 0) omerText += " " + hRem[days]; }
             document.getElementById('O2').innerText = omerText + " לעומר";
-        } else { document.getElementById('O2').innerText = ""; }
+        }
 
+        // Zmanim Calculations
         var list = [cal.getAlos16Point1Degrees(), cal.getMisheyakir11Degrees(), cal.getSunrise(), cal.getSofZmanShmaMGA(), cal.getSofZmanShmaGRA(), cal.getSofZmanTfilaGRA(), cal.getChatzos(), cal.getMinchaGedola(), cal.getPlagHamincha(), cal.getCandleLighting(), cal.getSunset(), cal.getTzais72()];
         for(var i=0; i<12; i++) {
             if(list[i]) {
