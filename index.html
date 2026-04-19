@@ -13,9 +13,40 @@
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
   #BSD { right: 15px; } #ENG_DATE { left: 15px; }
-  .clock-section { height: 16vh; display: flex; align-items: center; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; padding: 0 20px; }
-  .status-stack { flex: 1.5; text-align: center; border-left: 1px solid #333; height: 90%; display: flex; flex-direction: column; justify-content: center; }
-  .main-clock { flex: 3; text-align: center; font-size: 15vh; font-weight: 800; color: white; line-height: 1; font-family: 'Assistant', sans-serif; }
+ .clock-section { 
+    height: 16vh; 
+    display: flex; 
+    align-items: stretch; /* Forces children to fill height */
+    justify-content: space-between; 
+    border: 2px solid var(--gold); 
+    border-radius: 12px; 
+    padding: 0;           /* Removed the 20px padding */
+    overflow: hidden;
+  }
+
+  .status-stack { 
+    flex: 1.5; 
+    text-align: center; 
+    border-left: 1px solid #333; 
+    height: 100%;         /* Filled the full height */
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    background: #050505;  /* Subtle background to make it solid */
+  }
+
+  .main-clock { 
+    flex: 3; 
+    height: 100%;         /* Filled the full height */
+    display: flex; 
+    align-items: center;  /* Centers time vertically */
+    justify-content: center; 
+    font-size: 15vh; 
+    font-weight: 800; 
+    color: white; 
+    line-height: 1; 
+    font-family: 'Assistant', sans-serif; 
+  }
   .main-body { height: 72vh; display: flex; gap: 12px; }
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
