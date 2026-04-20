@@ -181,7 +181,6 @@
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
 
-// 1. DATA LOADER (Restores your text and pictures)
 function loadData() {
     var x = new XMLHttpRequest(); 
     x.open("GET", SCRIPT_URL, true);
@@ -200,7 +199,6 @@ function loadData() {
     x.send();
 }
 
-// 2. MAIN CLOCK
 function updateClock() {
     var now = new Date();
     var h = now.getHours() % 12 || 12;
@@ -210,38 +208,40 @@ function updateClock() {
     document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 
-// 3. THE SECONDS SHRINKER & ALIGNER (Balanced Legibility)
-function shrinkTableSeconds() {
+// NEW AGGRESSIVE SHRINKER
+function forceSmallSeconds() {
     var rows = document.querySelectorAll('.z-time');
     rows.forEach(function(row) {
-        var timeText = row.innerText.trim(); 
-        if (timeText.includes(':')) {
-            row.style.direction = 'ltr';
-            row.style.display = 'inline-block';
-            
-            var parts = timeText.split(':');
-            if (parts.length === 3) {
-                // FONT-SIZE: 0.7em is the "Sweet Spot" - legible but distinct
-                // OPACITY: 0.7 makes them brighter than before
-                // VERTICAL-ALIGN: 2px nudges them up just a hair for better alignment
-                row.innerHTML = parts[0] + ":" + parts[1] + 
-                    "<small style='font-size:0.7em; opacity:0.7; margin-left:3px; vertical-align:2px;'>:" + parts[2] + "</small>";
+        if (!row.querySelector('small')) {
+            var timeText = row.innerText.trim(); 
+            if (timeText.includes(':')) {
+                var parts = timeText.split(':');
+                if (parts.length === 3) {
+                    row.style.direction = 'ltr';
+                    row.style.display = 'inline-block';
+                    
+                    // FIXED: vertical-align: 0px and line-height: 1 forces them flat
+                    // SIZE: 0.82em for a clean, subtle difference
+                    row.innerHTML = parts[0] + ":" + parts[1] + ":" + 
+                        "<small style='font-size:0.82em !important; color:white !important; opacity:1 !important; margin-left:1px; vertical-align:0px; line-height:1; font-weight:800; display:inline-block;'>" + parts[2] + "</small>";
+                }
             }
         }
     });
-}// 4. RUN EVERYTHING
-setInterval(updateClock, 1000); 
+}
+// --- RUNNERS ---
 updateClock();
+setInterval(updateClock, 1000);
+
 loadData(); 
 setInterval(loadData, 60000);
 
-// Wait 2 seconds for the table to exist, then fix the seconds
-setTimeout(shrinkTableSeconds, 2000);
+// Run the shrinker every second to make sure it sticks
+setInterval(forceSmallSeconds, 1000); 
 
-// 5. THE "TONIGHT" FLIP (Refreshes the whole page after sunset)
+// Tonight Flip
 setInterval(function() {
     var now = new Date();
-    // At 8:26 PM (20:26), reload to move to tomorrow's Zmanim/Omer
     if (now.getHours() == 20 && now.getMinutes() == 26) {
         location.reload();
     }
