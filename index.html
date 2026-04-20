@@ -69,27 +69,28 @@
     gap: 12px; 
   }
 
-  .data-box { 
-    flex: 1.2; 
-    border: 2px solid var(--gold); 
-    border-radius: 10px; 
-    background: #080808; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    text-align: center; 
-    overflow: hidden; 
-    padding: 4px; 
-    height: 100%; 
-    position: relative; 
+ .data-box {
+    flex: 1.2;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    background: #080808;
+    display: flex;
+    align-items: center;      /* Centers text vertically */
+    justify-content: center;   /* Centers text horizontally */
+    text-align: center;
+    overflow: hidden;
+    padding: 15px;            /* Gives a little breathing room from the gold border */
+    height: 100%;
+    position: relative;
   }
 
-  .data-box span { 
-    width: 100%; 
-    display: block; 
-    word-wrap: break-word; 
-    line-height: 1.1; 
-    font-weight: 800; 
+  .data-box span {
+    width: 100%;
+    display: block;
+    line-height: 1.1;
+    font-weight: 800;
+    white-space: normal;      /* Allows text to wrap to multiple lines */
+    font-family: 'Assistant', sans-serif; /* Cleaner for long announcements */
   }
 
   .img-bleed { 
@@ -181,6 +182,19 @@
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
 
+function fitText(el) {
+    if (!el) return;
+    var parent = el.parentElement;
+    var fontSize = 8; // Start big (8vh)
+    el.style.fontSize = fontSize + "vh";
+
+    // Keep shrinking the font until the text fits inside the box height
+    while (el.scrollHeight > parent.clientHeight && fontSize > 1.5) {
+        fontSize -= 0.2;
+        el.style.fontSize = fontSize + "vh";
+    }
+}
+
 function loadData() {
     var x = new XMLHttpRequest(); 
     x.open("GET", SCRIPT_URL, true);
@@ -188,8 +202,18 @@ function loadData() {
         if (x.readyState == 4 && x.status == 200) {
             try {
                 var d = JSON.parse(x.responseText);
-                if(d.announcements) document.getElementById('ANN').innerText = d.announcements;
-                if(d.tefila) document.getElementById('TEF').innerText = d.tefila;
+                var ann = document.getElementById('ANN');
+                var tef = document.getElementById('TEF');
+                
+                if(d.announcements) {
+                    ann.innerText = d.announcements;
+                    fitText(ann); // Size it!
+                }
+                if(d.tefila) {
+                    tef.innerText = d.tefila;
+                    fitText(tef); // Size it!
+                }
+                
                 if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
                 if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
                 if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
@@ -198,7 +222,6 @@ function loadData() {
     }; 
     x.send();
 }
-
 function updateClock() {
     var now = new Date();
     var h = now.getHours() % 12 || 12;
