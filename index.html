@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Board - 7:54 PM FINAL STRESS TEST</title>
+<title>Bayswater Live - Official Shul Version</title>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -96,14 +96,14 @@ function updateUI() {
     
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
 
-    // TRIGGER FOR 7:54 PM
-    if (h > 19 || (h == 19 && m >= 54)) {
+    // FLIP TRIGGER: 8:28 PM (25 mins before 72-min RT 8:53)
+    if (h > 20 || (h == 20 && m >= 28) || (h == 19 && false)) { 
+        // Note: Logic set to 20:28 (8:28 PM)
         document.getElementById('DAY_LABEL').innerText = "יום רביעי";
         document.getElementById('DATE_LABEL').innerText = "ה׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום עשרים יום שהם שני שבועות ושישה ימים לעומר";
         document.getElementById('O_BECHINA').innerText = "יסוד שבתפארת";
         
-        // Wednesday Zmanim
         document.getElementById('z1').innerText = "4:40:02";
         document.getElementById('z2').innerText = "5:14:48";
         document.getElementById('z3').innerText = "6:07:05";
@@ -116,7 +116,6 @@ function updateUI() {
         document.getElementById('z10').innerText = "7:41:22";
         document.getElementById('z11').innerText = "8:54:08";
     } else {
-        // TUESDAY STATE
         document.getElementById('DAY_LABEL').innerText = "יום שלישי";
         document.getElementById('DATE_LABEL').innerText = "ד׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר";
