@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Board - 7:48 PM FLIP TEST</title>
+<title>Bayswater Board - 7:54 PM FINAL STRESS TEST</title>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -96,8 +96,8 @@ function updateUI() {
     
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
 
-    // TRIGGER FOR 7:48 PM
-    if (h > 19 || (h == 19 && m >= 48)) {
+    // TRIGGER FOR 7:54 PM
+    if (h > 19 || (h == 19 && m >= 54)) {
         document.getElementById('DAY_LABEL').innerText = "יום רביעי";
         document.getElementById('DATE_LABEL').innerText = "ה׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום עשרים יום שהם שני שבועות ושישה ימים לעומר";
