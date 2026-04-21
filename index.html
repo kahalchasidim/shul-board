@@ -262,11 +262,21 @@ setInterval(loadData, 60000);
 // Run the shrinker every second to make sure it sticks
 setInterval(forceSmallSeconds, 1000); 
 
-// Tonight Flip
+// 5. THE "TONIGHT" FLIP (Bulletproof Version)
 setInterval(function() {
     var now = new Date();
-    if (now.getHours() == 20 && now.getMinutes() == 26) {
-        location.reload();
+    var currentHour = now.getHours();
+    var currentMin = now.getMinutes();
+
+    // If it is 8:26 PM or ANY time after that tonight...
+    if (currentHour > 20 || (currentHour == 20 && currentMin >= 26)) {
+        
+        // Check if we already flipped (to prevent constant reloading)
+        if (!window.hasFlippedTonight) {
+            window.hasFlippedTonight = true;
+            console.log("Flip time detected. Refreshing for Tuesday...");
+            location.reload();
+        }
     }
-}, 60000);
+}, 30000); // Checks every 30 seconds
 </script>
