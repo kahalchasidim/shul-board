@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Live Board - Tuesday Stability Edition</title>
+<title>Bayswater Live Board - Tuesday Final</title>
 <script src="https://cdn.jsdelivr.net/npm/kosher-zmanim@2.3.0/dist/kosher-zmanim.min.js"></script>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
@@ -10,33 +10,25 @@
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
   body { background: #000; color: #fff; font-family: 'Suez One', serif; width: 100vw; height: 100vh; }
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
-  
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
   #BSD { right: 15px; } #ENG_DATE { left: 15px; }
-
   .clock-section { height: 18vh; display: flex; align-items: stretch; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; padding: 0; overflow: hidden; }
   .status-stack, .left-stack { flex: 2; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; background: #050505; }
   .main-clock { flex: 3; display: flex; align-items: center; justify-content: center; font-size: 19vh; font-weight: 800; font-family: 'Assistant', sans-serif; transform: scaleY(1.2); }
-
   .main-body { height: 72vh; display: flex; gap: 12px; }
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
-  .z-label { color: var(--gold); font-size: 4.1vh; }
-  .z-time { color: white; font-size: 3.6vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
+  .z-label { color: var(--gold); font-size: 4vh; }
+  .z-time { color: white; font-size: 3.4vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
   .z-time small { font-size: 0.82em; vertical-align: 0px; font-weight: 800; }
-
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-
-  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; overflow: hidden; }
-  .data-box span { width: 100%; text-align: center; font-weight: 800; line-height: 1.1; display: block; }
-
-  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; }
+  .data-box span { width: 100%; font-weight: 800; line-height: 1.1; }
+  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; display: flex; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; }
-
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-  #O_BECHINA { font-size: 3.8vh; color: #fff; margin-top: 8px; border-top: 1px solid #444; padding-top: 5px; width: 85%; }
 </style>
 </head>
 <body>
@@ -50,14 +42,13 @@
 
   <div class="clock-section">
     <div class="status-stack">
-        <div style="font-size:4.5vh;">יום שלישי</div>
-        <div style="font-size:4vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
+        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div>
+        <div id="DATE_LABEL" style="font-size:4vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
         <div style="font-size: 3.4vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
     </div>
     <div class="main-clock" id="CLOCK">00:00:00</div>
     <div class="left-stack">
-        <div style="font-size: 4.8vh; color: var(--gold); line-height:1;">מוריד הטל</div>
-        <div style="font-size: 4vh; color: white; line-height:1; margin-top:5px;">ותן ברכה</div>
+        <div style="font-size: 4.8vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:4vh;">ותן ברכה</span></div>
     </div>
   </div>
 
@@ -75,7 +66,6 @@
         <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:40<small>:08</small></span></div>
         <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:53<small>:00</small></span></div>
     </div>
-
     <div class="content-col">
       <div class="top-row">
         <div class="data-box"><span id="ANN"></span></div>
@@ -85,9 +75,9 @@
       <div class="bottom-row">
         <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
         <div class="omer-box">
-            <div style="font-size:3.5vh; color:#ccc;">ספירת העומר</div>
-            <div style="font-size:3.8vh; color:var(--gold); font-weight:800; line-height:1.2;">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
-            <div id="O_BECHINA">הוד שבנצח</div>
+            <div style="font-size:3.2vh; color:#ccc;">ספירת העומר</div>
+            <div id="O2" style="font-size:3.8vh; color:var(--gold); font-weight:800; line-height:1.2;">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
+            <div id="O_BECHINA" style="font-size: 3.4vh; color: #fff; margin-top: 8px; border-top: 1px solid #444; padding-top: 5px; width: 85%;">הוד שבנצח</div>
         </div>
         <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
       </div>
@@ -101,120 +91,15 @@ var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNA
 function fitText(el) {
     if (!el) return;
     var parent = el.parentElement;
-    var fontSize = 8;
-    el.style.fontSize = fontSize + "vh";
+    var fontSize = 8; el.style.fontSize = fontSize + "vh";
     while (el.scrollHeight > parent.clientHeight && fontSize > 1.5) {
-        fontSize -= 0.2;
-        el.style.fontSize = fontSize + "vh";
+        fontSize -= 0.2; el.style.fontSize = fontSize + "vh";
     }
 }
 
 function loadData() {
     var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL, true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                var ann = document.getElementById('ANN'), tef = document.getElementById('TEF');
-                if(d.announcements) { ann.innerText = d.announcements; fitText(ann); }
-                if(d.tefila) { tef.innerText = d.tefila; fitText(tef); }
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
-            } catch(e){}
-        }
-    }; 
-    x.send();
-}
-
-function updateClock() {
-    var now = new Date();
-    var h = now.getHours() % 12 || 12;
-    var m = String(now.getMinutes()).padStart(2, '0');
-    var s = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-// SMART REFRESHER (7 AM and 5 PM Only)
-setInterval(function() {
-    var now = new Date();
-    var hrs = now.getHours();
-    var mins = now.getMinutes();
-    if ((hrs == 7 && mins == 0) || (hrs == 17 && mins == 0)) {
-        location.reload();
-    }
-}, 55000); 
-
-setInterval(updateClock, 1000); updateClock();
-loadData(); setInterval(loadData, 60000);
-</script>
-</body>
-</html>  <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div>
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-  <div class="clock-section">
-    <div class="status-stack">
-        <div style="font-size:4.5vh;">יום שלישי</div>
-        <div style="font-size:4vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
-        <div style="font-size: 4vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-    <div class="left-stack">
-        <div style="display: none;" id="TACHANUN_NOTICE"></div>
-        <div style="font-size: 4.8vh; color: var(--gold);">מוריד הטל</div>
-        <div style="font-size: 4vh; color: white;">ותן ברכה</div>
-    </div>
-  </div>
-  <div class="main-body">
-    <div class="zemanim-col">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:41<small>:52</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:16<small>:08</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:08<small>:34</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:47<small>:12</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:31<small>:05</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:38<small>:44</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:20</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:35</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:15<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:40<small>:08</small></span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:53<small>:00</small></span></div>
-    </div>
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box"><span id="TEF"></span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3.5vh; color:#ccc;">ספירת העומר</div>
-            <div style="font-size:3.8vh; color:var(--gold); font-weight:800; line-height:1.2;">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
-            <div id="O_BECHINA">הוד שבנצח</div>
-        </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-function fitText(el) {
-    if (!el) return;
-    var parent = el.parentElement;
-    var fontSize = 8;
-    el.style.fontSize = fontSize + "vh";
-    while (el.scrollHeight > parent.clientHeight && fontSize > 1.5) {
-        fontSize -= 0.2;
-        el.style.fontSize = fontSize + "vh";
-    }
-}
-function loadData() {
-    var x = new XMLHttpRequest(); x.open("GET", SCRIPT_URL, true);
+    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
     x.onreadystatechange = function() {
         if (x.readyState == 4 && x.status == 200) {
             try {
@@ -229,258 +114,21 @@ function loadData() {
         }
     }; x.send();
 }
+
 function updateClock() {
     var now = new Date();
     var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
     document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
+    
+    // THE 12:15 AM TEST TRIGGER
+    if (now.getHours() == 0 && now.getMinutes() == 15 && now.getSeconds() == 0) {
+        console.log("Triggering 12:15 AM Refresh...");
+        location.reload();
+    }
 }
+
 setInterval(updateClock, 1000); updateClock();
 loadData(); setInterval(loadData, 60000);
 </script>
 </body>
-</html>  #TACHANUN_DEDICATION { font-size: 2.4vh; color: #e0e0e0; font-family: 'Assistant', sans-serif; margin-top: 4px; font-weight: 400; }
-
-  #TEFILLA_ALERTS { display: none; background: transparent; border: none; color: var(--gold); }
-  #T_MORID { font-size: 4.8vh; line-height: 1.1; }
-  #T_BERACHA { font-size: 4vh; color: white; line-height: 1.1; margin-top: 4px; }
-
-  .main-body { height: 72vh; display: flex; gap: 12px; }
-  .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
-  .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
-  .z-label { color: var(--gold); font-size: 4.1vh; }
-  .z-time { color: white; font-size: 3.6vh; font-family: 'Assistant', sans-serif; font-weight: 800; letter-spacing: 1px; } /* Slightly smaller for seconds */
-/* This rule makes the seconds small and dim */
- .z-time small {
-    font-size: 50% !important;    /* Forces it to be half the size of the 3.6vh */
-    opacity: 0.5 !important;      /* Makes it dim */
-    font-weight: 400 !important;  
-    margin-left: 2px;  
-    display: inline-block; 
-    vertical-align: top;          /* Moves it to the top like an exponent */
-    line-height: 2;               /* Adjusts spacing */
-  }
-
-  .content-col { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-  }
-
-  .top-row, .bottom-row { 
-    height: 48%; 
-    display: flex; 
-    gap: 12px; 
-  }
-
- .data-box {
-    flex: 1.2;
-    border: 2px solid var(--gold);
-    border-radius: 10px;
-    background: #080808;
-    display: flex;
-    align-items: center;      /* Centers text vertically */
-    justify-content: center;   /* Centers text horizontally */
-    text-align: center;
-    overflow: hidden;
-    padding: 15px;            /* Gives a little breathing room from the gold border */
-    height: 100%;
-    position: relative;
-  }
-
-  .data-box span {
-    width: 100%;
-    display: block;
-    line-height: 1.1;
-    font-weight: 800;
-    white-space: normal;      /* Allows text to wrap to multiple lines */
-    font-family: 'Assistant', sans-serif; /* Cleaner for long announcements */
-  }
-
-  .img-bleed { 
-    border: 2px solid var(--gold); 
-    border-radius: 10px; 
-    background: #000; 
-    overflow: hidden; 
-    display: flex; 
-    flex: 1.5; 
-  }
-
-  .img-bleed img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-  }
-  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5px; }
-  #O_BECHINA { font-size: 3.8vh; color: #fff; margin-top: 8px; border-top: 1px solid #444; padding-top: 5px; width: 85%; }
-</style>
-</head>
-<body>
-<div class="master-frame">
-  <div class="branding-bar">
-    <div id="ENG_DATE">April 20, 2026</div>
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-
-  <div class="clock-section">
-    <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שני</div>
-        <div id="DATE_LABEL" style="font-size:4vh; color:var(--gold);">ג׳ אייר תשפ״ו</div>
-        <div id="PARSHA_LABEL" style="font-size: 4vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-
-    <div class="left-stack">
-        <div id="RC_NOTICE_LEFT" class="notice-box" style="background: #8b0000; color: white;">
-    <div style="font-size: 6.5vh; font-weight: 800;">ראש חודש</div>
-    <div style="font-size: 3.5vh; font-family: 'Assistant'; font-weight: 400; margin-top: 2px;">יעלה ויבוא</div>
-</div>
-        <div id="TACHANUN_NOTICE" class="notice-box">
-            <div class="t-main-line">אין אומרים תחנון</div>
-            <div id="TACHANUN_DEDICATION">לע"נ ר' ישעיה ב"ר משה</div>
-        </div>
-        <div id="TEFILLA_ALERTS" class="notice-box">
-            <div id="T_MORID">מוריד הטל</div>
-            <div id="T_BERACHA">ותן ברכה</div>
-        </div>
-    </div>
-  </div>
-
-  <div class="main-body">
-    <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:43:21</span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:17:45</span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:10:12</span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:48:30</span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:32:15</span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:39:05</span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54:33</span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29:40</span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:14:18</span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">הדלקת נרות</span><span class="z-time">7:22:00</span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:38:55</span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:52:00</span></div>
-    </div>
-
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box"><span id="TEF"></span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3.5vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2" style="font-size:3.8vh; color:var(--gold); font-weight:800; line-height:1.2;">היום שמונה עשר יום שהם שני שבועות וארבעה ימים לעומר</div>
-            <div id="O_BECHINA">נצח שבתפארת</div>
-        </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-
-function fitText(el) {
-    if (!el) return;
-    var parent = el.parentElement;
-    var fontSize = 8; // Start big (8vh)
-    el.style.fontSize = fontSize + "vh";
-
-    // Keep shrinking the font until the text fits inside the box height
-    while (el.scrollHeight > parent.clientHeight && fontSize > 1.5) {
-        fontSize -= 0.2;
-        el.style.fontSize = fontSize + "vh";
-    }
-}
-
-function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL, true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                var ann = document.getElementById('ANN');
-                var tef = document.getElementById('TEF');
-                
-                if(d.announcements) {
-                    ann.innerText = d.announcements;
-                    fitText(ann); // Size it!
-                }
-                if(d.tefila) {
-                    tef.innerText = d.tefila;
-                    fitText(tef); // Size it!
-                }
-                
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
-            } catch(e){}
-        }
-    }; 
-    x.send();
-}
-function updateClock() {
-    var now = new Date();
-    var h = now.getHours() % 12 || 12;
-    var m = String(now.getMinutes()).padStart(2, '0');
-    var s = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-// NEW AGGRESSIVE SHRINKER
-function forceSmallSeconds() {
-    var rows = document.querySelectorAll('.z-time');
-    rows.forEach(function(row) {
-        if (!row.querySelector('small')) {
-            var timeText = row.innerText.trim(); 
-            if (timeText.includes(':')) {
-                var parts = timeText.split(':');
-                if (parts.length === 3) {
-                    row.style.direction = 'ltr';
-                    row.style.display = 'inline-block';
-                    
-                    // FIXED: vertical-align: 0px and line-height: 1 forces them flat
-                    // SIZE: 0.82em for a clean, subtle difference
-                    row.innerHTML = parts[0] + ":" + parts[1] + ":" + 
-                        "<small style='font-size:0.82em !important; color:white !important; opacity:1 !important; margin-left:1px; vertical-align:0px; line-height:1; font-weight:800; display:inline-block;'>" + parts[2] + "</small>";
-                }
-            }
-        }
-    });
-}
-// --- RUNNERS ---
-updateClock();
-setInterval(updateClock, 1000);
-
-loadData(); 
-setInterval(loadData, 60000);
-
-// Run the shrinker every second to make sure it sticks
-setInterval(forceSmallSeconds, 1000); 
-
-// 5. THE "TONIGHT" FLIP (Bulletproof Version)
-setInterval(function() {
-    var now = new Date();
-    var currentHour = now.getHours();
-    var currentMin = now.getMinutes();
-
-    // If it is 8:26 PM or ANY time after that tonight...
-    if (currentHour > 20 || (currentHour == 20 && currentMin >= 26)) {
-        
-        // Check if we already flipped (to prevent constant reloading)
-        if (!window.hasFlippedTonight) {
-            window.hasFlippedTonight = true;
-            console.log("Flip time detected. Refreshing for Tuesday...");
-            location.reload();
-        }
-    }
-}, 30000); // Checks every 30 seconds
-</script>
+</html>
