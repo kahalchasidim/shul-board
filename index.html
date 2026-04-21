@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Board - Clean Text Final</title>
+<title>Bayswater Board - 7:48 PM FLIP TEST</title>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -77,7 +77,7 @@
         <div class="omer-box">
             <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
             <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
-            <div id="O_BECHINA">הוד שבנצח</div>
+            <div id="O_BECHINA">הוד שבתפארת</div>
         </div>
         <div class="img-bleed" style="flex:1.4;"><img id="p5" src=""></div>
       </div>
@@ -96,8 +96,8 @@ function updateUI() {
     
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
 
-    // THE 7:39 PM FLIP TRIGGER
-    if (h > 19 || (h == 19 && m >= 39)) {
+    // TRIGGER FOR 7:48 PM
+    if (h > 19 || (h == 19 && m >= 48)) {
         document.getElementById('DAY_LABEL').innerText = "יום רביעי";
         document.getElementById('DATE_LABEL').innerText = "ה׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום עשרים יום שהם שני שבועות ושישה ימים לעומר";
@@ -116,9 +116,14 @@ function updateUI() {
         document.getElementById('z10').innerText = "7:41:22";
         document.getElementById('z11').innerText = "8:54:08";
     } else {
+        // TUESDAY STATE
         document.getElementById('DAY_LABEL').innerText = "יום שלישי";
+        document.getElementById('DATE_LABEL').innerText = "ד׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר";
         document.getElementById('O_BECHINA').innerText = "הוד שבתפארת";
+        
+        document.getElementById('z1').innerText = "4:41:12";
+        document.getElementById('z10').innerText = "7:40:18";
     }
 }
 
