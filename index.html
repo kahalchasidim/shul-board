@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Live Board - Seconds Edition</title>
+<title>Bayswater Live Board - Tuesday Edition</title>
 <script src="https://cdn.jsdelivr.net/npm/kosher-zmanim@2.3.0/dist/kosher-zmanim.min.js"></script>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
@@ -10,31 +10,118 @@
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
   body { background: #000; color: #fff; font-family: 'Suez One', serif; width: 100vw; height: 100vh; }
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
-  
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
   #BSD { right: 15px; } #ENG_DATE { left: 15px; }
-
   .clock-section { height: 18vh; display: flex; align-items: stretch; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; padding: 0; overflow: hidden; }
-  .status-stack, .left-stack { flex: 2; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; background: #050505; padding: 0; }
-  .status-stack { border-left: 1px solid #333; }
-  .left-stack { border-right: 1px solid #333; }
-
-  .main-clock { flex: 3; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 19vh; line-height: 1; font-weight: 800; color: white; font-family: 'Assistant', sans-serif; transform: scaleY(1.2) translateY(-2%); margin-top: -5px; }
-
-  .notice-box { width: 100%; text-align: center; font-weight: 800; padding: 10px 0; }
-  #RC_NOTICE_LEFT { background: #8b0000; color: white; font-size: 4.5vh; display: none; }
-  
-  #TACHANUN_NOTICE { 
-    background: #004d40; 
-    color: white; 
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .t-main-line { font-size: 4.2vh; font-weight: 800; }
-  #TACHANUN_DEDICATION { font-size: 2.4vh; color: #e0e0e0; font-family: 'Assistant', sans-serif; margin-top: 4px; font-weight: 400; }
+  .status-stack, .left-stack { flex: 2; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; background: #050505; }
+  .main-clock { flex: 3; display: flex; align-items: center; justify-content: center; font-size: 19vh; font-weight: 800; font-family: 'Assistant', sans-serif; transform: scaleY(1.2); }
+  .main-body { height: 72vh; display: flex; gap: 12px; }
+  .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
+  .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
+  .z-label { color: var(--gold); font-size: 4.1vh; }
+  .z-time { color: white; font-size: 3.6vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
+  .z-time small { font-size: 0.82em; vertical-align: 0px; font-weight: 800; }
+  .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; }
+  .data-box span { width: 100%; text-align: center; font-weight: 800; line-height: 1.1; }
+  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; }
+  .img-bleed img { width: 100%; height: 100%; object-fit: cover; }
+  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  #O_BECHINA { font-size: 3.8vh; color: #fff; margin-top: 8px; border-top: 1px solid #444; padding-top: 5px; width: 85%; }
+</style>
+</head>
+<body>
+<div class="master-frame">
+  <div class="branding-bar">
+    <div id="ENG_DATE">April 21, 2026</div>
+    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
+    <div id="BSD">בס"ד</div> 
+  </div>
+  <div class="clock-section">
+    <div class="status-stack">
+        <div style="font-size:4.5vh;">יום שלישי</div>
+        <div style="font-size:4vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
+        <div style="font-size: 4vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+    </div>
+    <div class="main-clock" id="CLOCK">00:00:00</div>
+    <div class="left-stack">
+        <div style="display: none;" id="TACHANUN_NOTICE"></div>
+        <div style="font-size: 4.8vh; color: var(--gold);">מוריד הטל</div>
+        <div style="font-size: 4vh; color: white;">ותן ברכה</div>
+    </div>
+  </div>
+  <div class="main-body">
+    <div class="zemanim-col">
+        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:41<small>:52</small></span></div>
+        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:16<small>:08</small></span></div>
+        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:08<small>:34</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:47<small>:12</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:31<small>:05</small></span></div>
+        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:38<small>:44</small></span></div>
+        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:20</small></span></div>
+        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:35</small></span></div>
+        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:15<small>:02</small></span></div>
+        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:40<small>:08</small></span></div>
+        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:53<small>:00</small></span></div>
+    </div>
+    <div class="content-col">
+      <div class="top-row">
+        <div class="data-box"><span id="ANN"></span></div>
+        <div class="img-bleed"><img id="p1"></div>
+        <div class="data-box"><span id="TEF"></span></div>
+      </div>
+      <div class="bottom-row">
+        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
+        <div class="omer-box">
+            <div style="font-size:3.5vh; color:#ccc;">ספירת העומר</div>
+            <div style="font-size:3.8vh; color:var(--gold); font-weight:800; line-height:1.2;">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
+            <div id="O_BECHINA">הוד שבנצח</div>
+        </div>
+        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
+function fitText(el) {
+    if (!el) return;
+    var parent = el.parentElement;
+    var fontSize = 8;
+    el.style.fontSize = fontSize + "vh";
+    while (el.scrollHeight > parent.clientHeight && fontSize > 1.5) {
+        fontSize -= 0.2;
+        el.style.fontSize = fontSize + "vh";
+    }
+}
+function loadData() {
+    var x = new XMLHttpRequest(); x.open("GET", SCRIPT_URL, true);
+    x.onreadystatechange = function() {
+        if (x.readyState == 4 && x.status == 200) {
+            try {
+                var d = JSON.parse(x.responseText);
+                var ann = document.getElementById('ANN'), tef = document.getElementById('TEF');
+                if(d.announcements) { ann.innerText = d.announcements; fitText(ann); }
+                if(d.tefila) { tef.innerText = d.tefila; fitText(tef); }
+                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
+                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
+                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
+            } catch(e){}
+        }
+    }; x.send();
+}
+function updateClock() {
+    var now = new Date();
+    var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
+}
+setInterval(updateClock, 1000); updateClock();
+loadData(); setInterval(loadData, 60000);
+</script>
+</body>
+</html>  #TACHANUN_DEDICATION { font-size: 2.4vh; color: #e0e0e0; font-family: 'Assistant', sans-serif; margin-top: 4px; font-weight: 400; }
 
   #TEFILLA_ALERTS { display: none; background: transparent; border: none; color: var(--gold); }
   #T_MORID { font-size: 4.8vh; line-height: 1.1; }
