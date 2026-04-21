@@ -2,11 +2,11 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Board - Master Automation Teal</title>
+<title>Bayswater Board - Smart Friday Automation</title>
 <script src="https://cdn.jsdelivr.net/npm/kosher-zmanim@2.3.0/dist/kosher-zmanim.min.js"></script>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
-  :root { --gold: #c29d6d; --teal: #004d40; } /* Fixed to your Teal color */
+  :root { --gold: #c29d6d; --teal: #004d40; }
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
   body { background: #000; color: #fff; font-family: 'Suez One', serif; width: 100vw; height: 100vh; }
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
@@ -35,6 +35,173 @@
 </style>
 </head>
 <body>
+
+<div class="master-frame">
+  <div class="branding-bar">
+    <div id="ENG_DATE">April 21, 2026</div>
+    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
+    <div id="BSD">בס"ד</div> 
+  </div>
+
+  <div class="clock-section">
+    <div class="status-stack">
+        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div>
+        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
+        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+    </div>
+    <div class="main-clock" id="CLOCK">00:00:00</div>
+    <div class="left-stack" id="ALERTS_HOLDER">
+        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
+    </div>
+  </div>
+
+  <div class="main-body">
+    <div class="zemanim-col" id="ZMANIM_LIST">
+        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:41<small>:52</small></span></div>
+        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:16<small>:08</small></span></div>
+        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:08<small>:34</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:47<small>:12</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:31<small>:05</small></span></div>
+        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:38<small>:44</small></span></div>
+        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:20</small></span></div>
+        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:35</small></span></div>
+        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:15<small>:02</small></span></div>
+        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:40<small>:08</small></span></div>
+        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:53<small>:00</small></span></div>
+    </div>
+    <div class="content-col">
+      <div class="top-row">
+        <div class="data-box"><span id="ANN"></span></div>
+        <div class="img-bleed"><img id="p1"></div>
+        <div class="data-box"><span id="TEF"></span></div>
+      </div>
+      <div class="bottom-row">
+        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
+        <div class="omer-box">
+            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
+            <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
+            <div id="O_BECHINA">הוד שבנצח</div>
+        </div>
+        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
+
+function loadData() {
+    var x = new XMLHttpRequest(); 
+    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
+    x.onreadystatechange = function() {
+        if (x.readyState == 4 && x.status == 200) {
+            try {
+                var d = JSON.parse(x.responseText);
+                if(d.announcements) document.getElementById('ANN').innerText = d.announcements;
+                if(d.tefila) document.getElementById('TEF').innerText = d.tefila;
+                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
+                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w800";
+                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w800";
+            } catch(e){}
+        }
+    }; x.send();
+}
+
+function refreshBoard() {
+    if (typeof KosherZmanim === 'undefined') return;
+    var now = new Date();
+    var nowRaw = new Date(); // Unmodified for time checking
+    
+    if (now.getHours() > 20 || (now.getHours() == 20 && now.getMinutes() >= 26)) {
+        now.setDate(now.getDate() + 1);
+    }
+
+    var loc = new KosherZmanim.GeoLocation("Bayswater", 40.59, -73.76, 0, "America/New_York");
+    var cal = new KosherZmanim.ComplexZmanimCalendar(loc);
+    cal.setDate(now);
+    var jcal = new KosherZmanim.JewishCalendar(now);
+
+    var dayNames = ["יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "ערב שבת קודש", "שבת קודש"];
+    var monthNames = ["ניסן", "אייר", "סיון", "תמוז", "אב", "אלול", "תשרי", "חשון", "כסלו", "טבת", "שבט", "אדר", "אדר ב"];
+    document.getElementById('DAY_LABEL').innerText = dayNames[jcal.getDayOfWeek() - 1];
+    document.getElementById('DATE_LABEL').innerText = jcal.getJewishDayOfMonth() + " " + monthNames[jcal.getJewishMonth() - 1] + " תשפ״ו";
+
+    // NO TACHANUN / SMART ALERT LOGIC
+    var alertsHtml = '';
+    var candleTime = cal.getCandleLighting();
+    var isFriday = (jcal.getDayOfWeek() == 6);
+    var isShabbos = (jcal.getDayOfWeek() == 7);
+    var isPastCandle = candleTime && nowRaw > new Date(candleTime);
+
+    // If it's Friday but BEFORE candle lighting, show Teal "Erev Shabbos"
+    if (isFriday && !isPastCandle) {
+        alertsHtml = `<div class="no-tachanun-alert"><div style="font-size:3vh; opacity:0.9;">בגלל ערב שבת קודש</div><div style="font-size:5vh; font-weight:800;">אין אומרים תחנון</div></div>`;
+    } 
+    // If it's Shabbos (or Friday night after candles), show regular reminder
+    else {
+        alertsHtml = `<div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>`;
+    }
+    document.getElementById('ALERTS_HOLDER').innerHTML = alertsHtml;
+
+    // Omer Logic
+    var o = jcal.getOmer();
+    if (o > 0) {
+        var hDays = ["", "יום אחד", "שני ימים", "שלושה ימים", "ארבעה ימים", "חמישה ימים", "שישה ימים", "שבעה ימים", "שמונה ימים", "תשעה ימים", "עשרה ימים", "אחד עשר יום", "שנים עשר יום", "שלושה עשר יום", "ארבעה עשר יום", "חמישה עשר יום", "שישה עשר יום", "שבעה עשר יום", "שמונה עשר יום", "תשעה עשר יום", "עשרים יום", "אחד ועשרים יום", "שניים ועשרים יום", "שלושה ועשרים יום", "ארבעה ועשרים יום", "חמישה ועשרים יום"];
+        var hWeeks = ["", "שבוע אחד", "שני שבועות", "שלושה שבועות", "ארבעה שבועות", "חמישה שבועות", "שישה שבועות"];
+        var hRem = ["", "ויום אחד", "ושני ימים", "ושלושה ימים", "ארבעה ימים", "חמישה ימים", "שישה ימים"];
+        var w = Math.floor(o / 7), d = o % 7;
+        var txt = "היום " + hDays[o];
+        if (w > 0) { txt += " שהם " + hWeeks[w]; if (d > 0) txt += " " + hRem[d]; }
+        document.getElementById('O2').innerText = txt + " לעומר";
+        var mid = ["חסד", "גבורה", "תפארת", "נצח", "הוד", "יסוד", "מלכות"];
+        document.getElementById('O_BECHINA').innerText = mid[(o - 1) % 7] + " שב" + mid[Math.floor((o - 1) / 7)];
+    }
+
+    var zList = [
+        { l: "עלות השחר", t: cal.getAlos16Point1Degrees() },
+        { l: "משיכיר", t: cal.getMisheyakir11Degrees() },
+        { l: "הנץ החמה", t: cal.getSunrise() },
+        { l: "ק\"ש מג\"א", t: cal.getSofZmanShmaMGA() },
+        { l: "ק\"ש גר\"א", t: cal.getSofZmanShmaGRA() },
+        { l: "תפילה גר\"א", t: cal.getSofZmanTfilaGRA() },
+        { l: "חצות", t: cal.getChatzos() },
+        { l: "מנחה גדולה", t: cal.getMinchaGedola() },
+        { l: "פלג המנחה", t: cal.getPlagHamincha() },
+        { l: "שקיעה", t: cal.getSunset() },
+        { l: "ר\"ת (72)", t: cal.getTzais72() }
+    ];
+    if (jcal.getDayOfWeek() == 6) { zList.splice(9, 0, { l: "הדלקת נרות", t: cal.getCandleLighting() }); }
+
+    var html = "";
+    zList.forEach(z => {
+        if (z.t) {
+            var dt = new Date(z.t);
+            var hr = dt.getHours() % 12 || 12, mn = String(dt.getMinutes()).padStart(2, '0'), sc = String(dt.getSeconds()).padStart(2, '0');
+            var bg = (z.l.includes("72") || z.l.includes("נרות")) ? "style='background:#2b2400;'" : "";
+            html += `<div class="z-row" ${bg}><span class="z-label">${z.l}</span><span class="z-time">${hr}:${mn}<small>:${sc}</small></span></div>`;
+        }
+    });
+    document.getElementById('ZMANIM_LIST').innerHTML = html;
+}
+
+function updateClock() {
+    var now = new Date();
+    var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
+    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    if ((now.getHours() == 0 && now.getMinutes() == 15 && now.getSeconds() == 0) || (now.getHours() == 7 && now.getMinutes() == 0 && now.getSeconds() == 0) || (now.getHours() == 17 && now.getMinutes() == 0 && now.getSeconds() == 0)) {
+        location.reload();
+    }
+}
+setInterval(updateClock, 1000); updateClock();
+loadData(); setInterval(loadData, 60000);
+// Run refresh frequently on Friday afternoon to catch the exact moment of Candle Lighting
+setInterval(refreshBoard, 30000); 
+setTimeout(refreshBoard, 2000); 
+</script>
+</body>
+</html><body>
 
 <div class="master-frame">
   <div class="branding-bar">
