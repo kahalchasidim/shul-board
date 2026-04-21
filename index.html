@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Live - Smart Automation</title>
+<title>Bayswater Live - Transition Master</title>
 <script src="https://cdn.jsdelivr.net/npm/kosher-zmanim@2.3.0/dist/kosher-zmanim.min.js"></script>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
@@ -38,16 +38,13 @@
 
 <div class="master-frame">
   <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div>
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
+    <div id="ENG_DATE">April 21, 2026</div> <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
     <div id="BSD">בס"ד</div> 
   </div>
 
   <div class="clock-section">
     <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div>
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
-        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div> <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ד׳ אייר תשפ״ו</div> <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
     </div>
     <div class="main-clock" id="CLOCK">00:00:00</div>
     <div class="left-stack" id="ALERTS_HOLDER">
@@ -79,9 +76,7 @@
         <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
         <div class="omer-box">
             <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
-            <div id="O_BECHINA">הוד שבנצח</div>
-        </div>
+            <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div> <div id="O_BECHINA">הוד שבנצח</div> </div>
         <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
       </div>
     </div>
@@ -111,8 +106,9 @@ function loadData() {
 function refreshBoard() {
     if (typeof KosherZmanim === 'undefined') return;
     var now = new Date();
-    var nowRaw = new Date(); 
+    var nowRaw = new Date();
     
+    // THE FLIP TRIGGER (8:26 PM)
     if (now.getHours() > 20 || (now.getHours() == 20 && now.getMinutes() >= 26)) {
         now.setDate(now.getDate() + 1);
     }
@@ -190,7 +186,7 @@ function updateClock() {
 }
 setInterval(updateClock, 1000); updateClock();
 loadData(); setInterval(loadData, 60000);
-setInterval(refreshBoard, 30000); 
+setInterval(refreshBoard, 30000); // The 30-second heartbeat
 setTimeout(refreshBoard, 2000); 
 </script>
 </body>
