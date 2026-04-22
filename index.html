@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Live - Forced Layout Fix</title>
+<title>Bayswater Live - Auto-Scaling Text</title>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -28,13 +28,144 @@
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
 
-  /* HARD FIX FOR TEXT OVERFLOW */
   .data-box { 
     flex: 1.2; 
     border: 2px solid var(--gold); 
     border-radius: 10px; 
     background: #080808; 
     display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 15px; 
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .data-box span { 
+    font-weight: 800; 
+    line-height: 1.1; 
+    width: 100%;
+    word-wrap: break-word;
+    display: block;
+    /* Base font size - JS will shrink this if needed */
+    font-size: 5vh; 
+  }
+
+  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
+  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+
+  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
+  #O2 { font-size: 3.1vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
+  #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; }
+</style>
+</head>
+<body>
+
+<div class="master-frame">
+  <div class="branding-bar">
+    <div id="ENG_DATE">April 21, 2026</div> 
+    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
+    <div id="BSD">בס"ד</div> 
+  </div>
+
+  <div class="clock-section">
+    <div class="status-stack">
+        <div id="DAY_LABEL" style="font-size:4.5vh;">יום רביעי</div> 
+        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ה׳ אייר תשפ״ו</div> 
+        <div style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+    </div>
+    <div class="main-clock" id="CLOCK">00:00:00</div>
+    <div class="left-stack">
+        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
+    </div>
+  </div>
+
+  <div class="main-body">
+    <div class="zemanim-col" id="ZMANIM_LIST">
+        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:40<small>:02</small></span></div>
+        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:14<small>:48</small></span></div>
+        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:07<small>:05</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:45<small>:55</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:30<small>:12</small></span></div>
+        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:37<small>:34</small></span></div>
+        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:02</small></span></div>
+        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:44</small></span></div>
+        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:16<small>:15</small></span></div>
+        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:41<small>:22</small></span></div>
+        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:54<small>:08</small></span></div>
+    </div>
+    <div class="content-col">
+      <div class="top-row">
+        <div class="data-box" id="box1"><span id="ANN"></span></div>
+        <div class="img-bleed"><img id="p1"></div>
+        <div class="data-box" id="box2"><span id="TEF"></span></div>
+      </div>
+      <div class="bottom-row">
+        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
+        <div class="omer-box">
+            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
+            <div id="O2">היום עשרים יום שהם שני שבועות ושישה ימים לעומר</div> 
+            <div id="O_BECHINA">יסוד שבתפארת</div> </div>
+        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
+
+// FUNCTION TO AUTOMATICALLY SHRINK TEXT TO FIT
+function fitText(el) {
+    let parent = el.parentElement;
+    let fontSize = 5; // Start at 5vh
+    el.style.fontSize = fontSize + "vh";
+
+    while ((el.scrollHeight > parent.clientHeight || el.scrollWidth > parent.clientWidth) && fontSize > 1.5) {
+        fontSize -= 0.2;
+        el.style.fontSize = fontSize + "vh";
+    }
+}
+
+function updateClock() {
+    var now = new Date();
+    var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
+    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function loadData() {
+    var x = new XMLHttpRequest(); 
+    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
+    x.onreadystatechange = function() {
+        if (x.readyState == 4 && x.status == 200) {
+            try {
+                var d = JSON.parse(x.responseText);
+                let ann = document.getElementById('ANN');
+                let tef = document.getElementById('TEF');
+                
+                ann.innerText = d.announcements || "";
+                tef.innerText = d.tefila || "";
+                
+                // Run the auto-scaler after text is loaded
+                fitText(ann);
+                fitText(tef);
+
+                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
+                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
+                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
+            } catch(e){}
+        }
+    }; x.send();
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+loadData();
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>    display: flex; 
     align-items: center; 
     justify-content: center; 
     padding: 15px; 
