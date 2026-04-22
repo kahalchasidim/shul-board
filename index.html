@@ -2,10 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Live - Official Shul Version</title>
+<title>Bayswater Live - Production Final</title>
 <style> 
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
-  :root { --gold: #c29d6d; }
+  :root { --gold: #c29d6d; --teal: #004d40; }
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
   body { background: #000; color: #fff; font-family: 'Suez One', serif; width: 100vw; height: 100vh; }
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
@@ -19,15 +19,16 @@
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
   .z-label { color: var(--gold); font-size: 3.2vh; }
-  .z-time { color: white; font-size: 2.8vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
+  .z-time { color: white; font-size: 3vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
+  .z-time small { font-size: 0.75em; opacity: 0.8; }
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; }
   .data-box span { font-size: 5vh; font-weight: 800; line-height: 1.1; width: 100%; }
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
-  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; }
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
-  #O2 { font-size: 2.8vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
+  #O2 { font-size: 3.2vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
   #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; }
 </style>
 </head>
@@ -35,16 +36,16 @@
 
 <div class="master-frame">
   <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div>
+    <div id="ENG_DATE">April 21, 2026</div> 
     <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
     <div id="BSD">בס"ד</div> 
   </div>
 
   <div class="clock-section">
     <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div>
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ד׳ אייר תשפ״ו</div>
-        <div style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div> 
+        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ד׳ אייר תשפ״ו</div> 
+        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
     </div>
     <div class="main-clock" id="CLOCK">00:00:00</div>
     <div class="left-stack">
@@ -53,33 +54,32 @@
   </div>
 
   <div class="main-body">
-    <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">4:41:12</span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time" id="z2">5:16:04</span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">6:08:22</span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time" id="z4">8:47:15</span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time" id="z5">9:31:02</span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time" id="z6">10:38:44</span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time" id="z7">12:54:10</span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">1:29:55</span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">6:15:32</span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">7:40:18</span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">8:53:10</span></div>
+    <div class="zemanim-col">
+        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">4:41<small>:12</small></span></div>
+        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time" id="z2">5:16<small>:04</small></span></div>
+        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">6:08<small>:22</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time" id="z4">8:47<small>:15</small></span></div>
+        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time" id="z5">9:31<small>:02</small></span></div>
+        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time" id="z6">10:38<small>:44</small></span></div>
+        <div class="z-row"><span class="z-label">חצות</span><span class="z-time" id="z7">12:54<small>:10</small></span></div>
+        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">1:29<small>:55</small></span></div>
+        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">6:15<small>:32</small></span></div>
+        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">7:40<small>:18</small></span></div>
+        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">8:53<small>:10</small></span></div>
     </div>
     <div class="content-col">
       <div class="top-row">
         <div class="data-box"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1" src=""></div>
+        <div class="img-bleed"><img id="p1"></div>
         <div class="data-box"><span id="TEF"></span></div>
       </div>
       <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4" src=""></div>
+        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
         <div class="omer-box">
             <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div>
-            <div id="O_BECHINA">הוד שבתפארת</div>
-        </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5" src=""></div>
+            <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div> 
+            <div id="O_BECHINA">הוד שבתפארת</div> </div>
+        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
       </div>
     </div>
   </div>
@@ -94,35 +94,36 @@ function updateUI() {
     var m = now.getMinutes();
     var s = now.getSeconds();
     
+    // CLOCK
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
 
-    // FLIP TRIGGER: 8:28 PM (25 mins before 72-min RT 8:53)
-    if (h > 20 || (h == 20 && m >= 28) || (h == 19 && false)) { 
-        // Note: Logic set to 20:28 (8:28 PM)
+    // FLIP TRIGGER: 8:28 PM (20:28)
+    if (h > 20 || (h == 20 && m >= 28)) {
         document.getElementById('DAY_LABEL').innerText = "יום רביעי";
         document.getElementById('DATE_LABEL').innerText = "ה׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום עשרים יום שהם שני שבועות ושישה ימים לעומר";
         document.getElementById('O_BECHINA').innerText = "יסוד שבתפארת";
         
-        document.getElementById('z1').innerText = "4:40:02";
-        document.getElementById('z2').innerText = "5:14:48";
-        document.getElementById('z3').innerText = "6:07:05";
-        document.getElementById('z4').innerText = "8:45:55";
-        document.getElementById('z5').innerText = "9:30:12";
-        document.getElementById('z6').innerText = "10:37:34";
-        document.getElementById('z7').innerText = "12:54:02";
-        document.getElementById('z8').innerText = "1:29:44";
-        document.getElementById('z9').innerText = "6:16:15";
-        document.getElementById('z10').innerText = "7:41:22";
-        document.getElementById('z11').innerText = "8:54:08";
+        // Wednesday Times - Hardcoded for Stability
+        document.getElementById('z1').innerHTML = "4:40<small>:02</small>";
+        document.getElementById('z2').innerHTML = "5:14<small>:48</small>";
+        document.getElementById('z3').innerHTML = "6:07<small>:05</small>";
+        document.getElementById('z4').innerHTML = "8:45<small>:55</small>";
+        document.getElementById('z5').innerHTML = "9:30<small>:12</small>";
+        document.getElementById('z6').innerHTML = "10:37<small>:34</small>";
+        document.getElementById('z7').innerHTML = "12:54<small>:02</small>";
+        document.getElementById('z8').innerHTML = "1:29<small>:44</small>";
+        document.getElementById('z9').innerHTML = "6:16<small>:15</small>";
+        document.getElementById('z10').innerHTML = "7:41<small>:22</small>";
+        document.getElementById('z11').innerHTML = "8:54<small>:08</small>";
     } else {
+        // TUESDAY INFO
         document.getElementById('DAY_LABEL').innerText = "יום שלישי";
-        document.getElementById('DATE_LABEL').innerText = "ד׳ אייר תשפ״ו";
         document.getElementById('O2').innerText = "היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר";
         document.getElementById('O_BECHINA').innerText = "הוד שבתפארת";
         
-        document.getElementById('z1').innerText = "4:41:12";
-        document.getElementById('z10').innerText = "7:40:18";
+        document.getElementById('z1').innerHTML = "4:41<small>:12</small>";
+        document.getElementById('z10').innerHTML = "7:40<small>:18</small>";
     }
 }
 
@@ -131,12 +132,14 @@ function loadData() {
     x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
     x.onreadystatechange = function() {
         if (x.readyState == 4 && x.status == 200) {
-            var d = JSON.parse(x.responseText);
-            document.getElementById('ANN').innerText = d.announcements || "";
-            document.getElementById('TEF').innerText = d.tefila || "";
-            if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1000";
-            if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
-            if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
+            try {
+                var d = JSON.parse(x.responseText);
+                document.getElementById('ANN').innerText = d.announcements || "";
+                document.getElementById('TEF').innerText = d.tefila || "";
+                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
+                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
+                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
+            } catch(e){}
         }
     }; x.send();
 }
