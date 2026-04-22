@@ -2,9 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master - Correct Flip Logic</title>
+<title>Bayswater Master - Calm Scaling</title>
 <style> 
-  /* --- 1. THE STYLE LOCK (CSS) --- */
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
@@ -24,13 +23,13 @@
   .z-time small { font-size: 0.75em; opacity: 0.8; }
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; }
-  .data-box span { font-weight: 800; line-height: 1.1; width: 100%; word-wrap: break-word; display: block; font-size: 4.5vh; }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; overflow: hidden; }
+  .data-box span { font-weight: 800; line-height: 1.1; width: 100%; word-wrap: break-word; display: block; font-size: 4.5vh; transition: font-size 0.3s ease; }
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
   .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; overflow: hidden; }
   .omer-title { font-size: 2.2vh; color: #ccc; margin-bottom: 4px; }
-  #O2 { color: var(--gold); font-weight: 800; line-height: 1.1; width: 100%; display: block; font-size: 4vh; }
+  #O2 { color: var(--gold); font-weight: 800; line-height: 1.1; width: 100%; display: block; font-size: 4vh; transition: font-size 0.3s ease; }
   #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; margin-top: 8px; }
 </style>
 </head>
@@ -76,8 +75,8 @@
 </div>
 
 <script>
-/* --- 3. THE ENGINE --- */
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
+var lastIso = "";
 
 var schedule = {
     "2026-04-21": { day:"יום שלישי", heb:"ד׳ אייר", omer:"תשעה עשר יום שהם שני שבועות וחמישה ימים", bechina:"הוד שבתפארת", z:["4:41:12","5:16:04","6:08:22","8:47:15","9:31:02","10:38:44","12:54:10","1:29:55","6:15:32","7:40:18","8:53:10"] },
@@ -105,40 +104,34 @@ function updateUI() {
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
     document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // THE FLIP LOGIC: Use YYYY-MM-DD
     var d = new Date();
-    // If it is AFTER 8:28 PM (20:28), we show TOMORROW'S info
-    if (h > 20 || (h == 20 && m >= 28)) {
-        d.setDate(d.getDate() + 1);
-    }
-    
-    // Correct local ISO date construction
-    var year = d.getFullYear();
-    var month = String(d.getMonth() + 1).padStart(2, '0');
-    var day = String(d.getDate()).padStart(2, '0');
-    var iso = year + "-" + month + "-" + day;
+    if (h > 20 || (h == 20 && m >= 28)) { d.setDate(d.getDate() + 1); }
+    var iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
 
-    var data = schedule[iso];
-
-    if (data) {
-        document.getElementById('DAY_LABEL').innerText = data.day;
-        document.getElementById('DATE_LABEL').innerText = data.heb + " תשפ״ו";
-        let omerEl = document.getElementById('O2');
-        omerEl.innerText = "היום " + data.omer + " לעומר";
-        fitText(omerEl, 4.2); 
-        document.getElementById('O_BECHINA').innerText = data.bechina;
-        for (let i=1; i<=11; i++) {
-            let p = data.z[i-1].split(':');
-            document.getElementById('z' + i).innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+    // ONLY REFRESH CONTENT IF DATE CHANGES
+    if (iso !== lastIso) {
+        lastIso = iso;
+        var data = schedule[iso];
+        if (data) {
+            document.getElementById('DAY_LABEL').innerText = data.day;
+            document.getElementById('DATE_LABEL').innerText = data.heb + " תשפ״ו";
+            let omerEl = document.getElementById('O2');
+            omerEl.innerText = "היום " + data.omer + " לעומר";
+            fitText(omerEl, 4.2); 
+            document.getElementById('O_BECHINA').innerText = data.bechina;
+            for (let i=1; i<=11; i++) {
+                let p = data.z[i-1].split(':');
+                document.getElementById('z' + i).innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+            }
+            var spec = document.getElementById('row_special');
+            if (data.candle) {
+                spec.style.display = 'flex'; document.getElementById('z_spec_label').innerText = 'הדלקת נרות';
+                let p = data.candle.split(':'); document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+            } else if (data.motzai) {
+                spec.style.display = 'flex'; document.getElementById('z_spec_label').innerText = 'מוצאי שבת';
+                let p = data.motzai.split(':'); document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+            } else { spec.style.display = 'none'; }
         }
-        var spec = document.getElementById('row_special');
-        if (data.candle) {
-            spec.style.display = 'flex'; document.getElementById('z_spec_label').innerText = 'הדלקת נרות';
-            let p = data.candle.split(':'); document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
-        } else if (data.motzai) {
-            spec.style.display = 'flex'; document.getElementById('z_spec_label').innerText = 'מוצאי שבת';
-            let p = data.motzai.split(':'); document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
-        } else { spec.style.display = 'none'; }
     }
 }
 
@@ -152,620 +145,6 @@ function loadData() {
                 let ann = document.getElementById('ANN'), tef = document.getElementById('TEF');
                 ann.innerText = d.announcements || ""; tef.innerText = d.tefila || "";
                 fitText(ann, 4.8); fitText(tef, 4.8);
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
-            } catch(e){}
-        }
-    }; x.send();
-}
-
-setInterval(updateUI, 1000);
-updateUI();
-loadData();
-setInterval(loadData, 60000);
-</script>
-</body>
-</html>  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
-  #O2 { font-size: 3vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
-  #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; }
-</style>
-</head>
-<body>
-
-<div class="master-frame">
-  <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div> 
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-
-  <div class="clock-section">
-    <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום רביעי</div> 
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ה׳ אייר תשפ״ו</div> 
-        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-    <div class="left-stack">
-        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
-    </div>
-  </div>
-
-  <div class="main-body">
-    <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time" id="z2">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time" id="z4">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time" id="z5">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time" id="z6">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time" id="z7">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
-        
-        <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;">
-            <span class="z-label" id="z_spec_label">הדלקת נרות</span>
-            <span class="z-time" id="z_spec_time">--:--<small>:--</small></span>
-        </div>
-
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
-    </div>
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box"><span id="TEF"></span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">--</div> 
-            <div id="O_BECHINA">--</div> </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-/* --- 3. THE ENGINE (JAVASCRIPT) --- */
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-
-function fitText(el) {
-    let parent = el.parentElement;
-    let fontSize = 5;
-    el.style.fontSize = fontSize + "vh";
-    while ((el.scrollHeight > parent.clientHeight || el.scrollWidth > parent.clientWidth) && fontSize > 1.5) {
-        fontSize -= 0.2;
-        el.style.fontSize = fontSize + "vh";
-    }
-}
-
-function updateUI() {
-    var now = new Date();
-    var h = now.getHours();
-    var m = now.getMinutes();
-    var s = now.getSeconds();
-    
-    // Live Clock & Secular Date
-    document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-    // SET TO WEDNESDAY (Flipped State)
-    document.getElementById('DAY_LABEL').innerText = "יום רביעי";
-    document.getElementById('DATE_LABEL').innerText = "ה׳ אייר תשפ״ו";
-    document.getElementById('O2').innerText = "היום עשרים יום שהם שני שבועות ושישה ימים לעומר";
-    document.getElementById('O_BECHINA').innerText = "יסוד שבתפארת";
-    
-    // Wednesday Zmanim Data
-    document.getElementById('z1').innerHTML = "4:40<small>:02</small>";
-    document.getElementById('z2').innerHTML = "5:14<small>:48</small>";
-    document.getElementById('z3').innerHTML = "6:07<small>:05</small>";
-    document.getElementById('z4').innerHTML = "8:45<small>:55</small>";
-    document.getElementById('z5').innerHTML = "9:30<small>:12</small>";
-    document.getElementById('z6').innerHTML = "10:37<small>:34</small>";
-    document.getElementById('z7').innerHTML = "12:54<small>:02</small>";
-    document.getElementById('z8').innerHTML = "1:29<small>:44</small>";
-    document.getElementById('z9').innerHTML = "6:16<small>:15</small>";
-    document.getElementById('z10').innerHTML = "7:41<small>:22</small>";
-    document.getElementById('z11').innerHTML = "8:54<small>:08</small>";
-
-    // SPECIAL 12th ROW LOGIC (Example for Friday)
-    // if (Friday) {
-    //    document.getElementById('row_special').style.display = 'flex';
-    //    document.getElementById('z_spec_label').innerText = 'הדלקת נרות';
-    //    document.getElementById('z_spec_time').innerHTML = '7:28<small>:00</small>';
-    // } else {
-    document.getElementById('row_special').style.display = 'none';
-    // }
-}
-
-function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                let ann = document.getElementById('ANN');
-                let tef = document.getElementById('TEF');
-                ann.innerText = d.announcements || "";
-                tef.innerText = d.tefila || "";
-                fitText(ann);
-                fitText(tef);
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
-            } catch(e){}
-        }
-    }; x.send();
-}
-
-setInterval(updateUI, 1000);
-updateUI();
-loadData();
-setInterval(loadData, 60000);
-</script>
-</body>
-</html>    align-items: center; 
-    justify-content: center; 
-    padding: 15px; 
-    text-align: center;
-    overflow: hidden;
-    position: relative;
-  }
-  .data-box span { 
-    font-weight: 800; 
-    line-height: 1.1; 
-    width: 100%;
-    word-wrap: break-word;
-    display: block;
-    /* Base font size - JS will shrink this if needed */
-    font-size: 5vh; 
-  }
-
-  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
-  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
-
-  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
-  #O2 { font-size: 3.1vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
-  #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; }
-</style>
-</head>
-<body>
-
-<div class="master-frame">
-  <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div> 
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-
-  <div class="clock-section">
-    <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום רביעי</div> 
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ה׳ אייר תשפ״ו</div> 
-        <div style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-    <div class="left-stack">
-        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
-    </div>
-  </div>
-
-  <div class="main-body">
-    <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:40<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:14<small>:48</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:07<small>:05</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:45<small>:55</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:30<small>:12</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:37<small>:34</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:44</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:16<small>:15</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:41<small>:22</small></span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:54<small>:08</small></span></div>
-    </div>
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box" id="box1"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box" id="box2"><span id="TEF"></span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">היום עשרים יום שהם שני שבועות ושישה ימים לעומר</div> 
-            <div id="O_BECHINA">יסוד שבתפארת</div> </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-
-// FUNCTION TO AUTOMATICALLY SHRINK TEXT TO FIT
-function fitText(el) {
-    let parent = el.parentElement;
-    let fontSize = 5; // Start at 5vh
-    el.style.fontSize = fontSize + "vh";
-
-    while ((el.scrollHeight > parent.clientHeight || el.scrollWidth > parent.clientWidth) && fontSize > 1.5) {
-        fontSize -= 0.2;
-        el.style.fontSize = fontSize + "vh";
-    }
-}
-
-function updateClock() {
-    var now = new Date();
-    var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                let ann = document.getElementById('ANN');
-                let tef = document.getElementById('TEF');
-                
-                ann.innerText = d.announcements || "";
-                tef.innerText = d.tefila || "";
-                
-                // Run the auto-scaler after text is loaded
-                fitText(ann);
-                fitText(tef);
-
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
-            } catch(e){}
-        }
-    }; x.send();
-}
-
-setInterval(updateClock, 1000);
-updateClock();
-loadData();
-setInterval(loadData, 60000);
-</script>
-</body>
-</html>    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 15px; 
-    text-align: center;
-    max-height: 100%; /* Prevents box from expanding */
-  }
-  .data-box span { 
-    font-size: 4vh; /* Dropped slightly for safety */
-    font-weight: 800; 
-    line-height: 1.1; 
-    max-width: 100%;
-    word-break: break-word; /* Forces break if string is too long */
-    display: -webkit-box;
-    -webkit-line-clamp: 4; /* Limits to 4 lines before hiding extra */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
-  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
-
-  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
-  #O2 { font-size: 3vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
-  #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; }
-</style>
-</head>
-<body>
-
-<div class="master-frame">
-  <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div> 
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-
-  <div class="clock-section">
-    <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום רביעי</div> 
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ה׳ אייר תשפ״ו</div> 
-        <div style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-    <div class="left-stack">
-        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
-    </div>
-  </div>
-
-  <div class="main-body">
-    <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:40<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:14<small>:48</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:07<small>:05</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:45<small>:55</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:30<small>:12</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:37<small>:34</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:44</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:16<small>:15</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:41<small>:22</small></span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:54<small>:08</small></span></div>
-    </div>
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box"><span id="ANN">...</span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box"><span id="TEF">...</span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">היום עשרים יום שהם שני שבועות ושישה ימים לעומר</div> 
-            <div id="O_BECHINA">יסוד שבתפארת</div> </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-
-function updateClock() {
-    var now = new Date();
-    var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                document.getElementById('ANN').innerText = d.announcements || "";
-                document.getElementById('TEF').innerText = d.tefila || "";
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
-            } catch(e){}
-        }
-    }; x.send();
-}
-
-setInterval(updateClock, 1000);
-updateClock();
-loadData();
-setInterval(loadData, 60000);
-</script>
-</body>
-</html>    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 15px; 
-    text-align: center;
-    overflow: hidden; 
-  }
-  .data-box span { 
-    font-size: 4.5vh; 
-    font-weight: 800; 
-    line-height: 1.1; 
-    width: 100%; 
-    word-wrap: break-word;
-    display: block;
-  }
-
-  .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
-  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
-
-  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
-  #O2 { font-size: 3.2vh; color: var(--gold); font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
-  #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; }
-</style>
-</head>
-<body>
-
-<div class="master-frame">
-  <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div> 
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-
-  <div class="clock-section">
-    <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום רביעי</div> 
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ה׳ אייר תשפ״ו</div> 
-        <div style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-    <div class="left-stack">
-        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
-    </div>
-  </div>
-
-  <div class="main-body">
-    <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time">4:40<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time">5:14<small>:48</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time">6:07<small>:05</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time">8:45<small>:55</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time">9:30<small>:12</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time">10:37<small>:34</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time">12:54<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time">1:29<small>:44</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time">6:16<small>:15</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time">7:41<small>:22</small></span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time">8:54<small>:08</small></span></div>
-    </div>
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box"><span id="TEF"></span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">היום עשרים יום שהם שני שבועות ושישה ימים לעומר</div> 
-            <div id="O_BECHINA">יסוד שבתפארת</div> </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-
-function updateClock() {
-    var now = new Date();
-    var h = now.getHours() % 12 || 12, m = String(now.getMinutes()).padStart(2, '0'), s = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('CLOCK').innerHTML = h + ":" + m + ":" + s;
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                document.getElementById('ANN').innerText = d.announcements || "";
-                document.getElementById('TEF').innerText = d.tefila || "";
-                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
-                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
-                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
-            } catch(e){}
-        }
-    }; x.send();
-}
-
-setInterval(updateClock, 1000);
-updateClock();
-loadData();
-setInterval(loadData, 60000);
-</script>
-</body>
-</html><div class="master-frame">
-  <div class="branding-bar">
-    <div id="ENG_DATE">April 21, 2026</div> 
-    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
-    <div id="BSD">בס"ד</div> 
-  </div>
-
-  <div class="clock-section">
-    <div class="status-stack">
-        <div id="DAY_LABEL" style="font-size:4.5vh;">יום שלישי</div> 
-        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">ד׳ אייר תשפ״ו</div> 
-        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
-    </div>
-    <div class="main-clock" id="CLOCK">00:00:00</div>
-    <div class="left-stack">
-        <div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>
-    </div>
-  </div>
-
-  <div class="main-body">
-    <div class="zemanim-col">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">4:41<small>:12</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time" id="z2">5:16<small>:04</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">6:08<small>:22</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time" id="z4">8:47<small>:15</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time" id="z5">9:31<small>:02</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time" id="z6">10:38<small>:44</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time" id="z7">12:54<small>:10</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">1:29<small>:55</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">6:15<small>:32</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">7:40<small>:18</small></span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">8:53<small>:10</small></span></div>
-    </div>
-    <div class="content-col">
-      <div class="top-row">
-        <div class="data-box"><span id="ANN"></span></div>
-        <div class="img-bleed"><img id="p1"></div>
-        <div class="data-box"><span id="TEF"></span></div>
-      </div>
-      <div class="bottom-row">
-        <div class="img-bleed" style="flex:1.4;"><img id="p4"></div>
-        <div class="omer-box">
-            <div style="font-size:3vh; color:#ccc;">ספירת העומר</div>
-            <div id="O2">היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר</div> 
-            <div id="O_BECHINA">הוד שבתפארת</div> </div>
-        <div class="img-bleed" style="flex:1.4;"><img id="p5"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-
-function updateUI() {
-    var now = new Date();
-    var h = now.getHours();
-    var m = now.getMinutes();
-    var s = now.getSeconds();
-    
-    // CLOCK
-    document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
-
-    // FLIP TRIGGER: 8:28 PM (20:28)
-    if (h > 20 || (h == 20 && m >= 28)) {
-        document.getElementById('DAY_LABEL').innerText = "יום רביעי";
-        document.getElementById('DATE_LABEL').innerText = "ה׳ אייר תשפ״ו";
-        document.getElementById('O2').innerText = "היום עשרים יום שהם שני שבועות ושישה ימים לעומר";
-        document.getElementById('O_BECHINA').innerText = "יסוד שבתפארת";
-        
-        // Wednesday Times - Hardcoded for Stability
-        document.getElementById('z1').innerHTML = "4:40<small>:02</small>";
-        document.getElementById('z2').innerHTML = "5:14<small>:48</small>";
-        document.getElementById('z3').innerHTML = "6:07<small>:05</small>";
-        document.getElementById('z4').innerHTML = "8:45<small>:55</small>";
-        document.getElementById('z5').innerHTML = "9:30<small>:12</small>";
-        document.getElementById('z6').innerHTML = "10:37<small>:34</small>";
-        document.getElementById('z7').innerHTML = "12:54<small>:02</small>";
-        document.getElementById('z8').innerHTML = "1:29<small>:44</small>";
-        document.getElementById('z9').innerHTML = "6:16<small>:15</small>";
-        document.getElementById('z10').innerHTML = "7:41<small>:22</small>";
-        document.getElementById('z11').innerHTML = "8:54<small>:08</small>";
-    } else {
-        // TUESDAY INFO
-        document.getElementById('DAY_LABEL').innerText = "יום שלישי";
-        document.getElementById('O2').innerText = "היום תשעה עשר יום שהם שני שבועות וחמישה ימים לעומר";
-        document.getElementById('O_BECHINA').innerText = "הוד שבתפארת";
-        
-        document.getElementById('z1').innerHTML = "4:41<small>:12</small>";
-        document.getElementById('z10').innerHTML = "7:40<small>:18</small>";
-    }
-}
-
-function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
-    x.onreadystatechange = function() {
-        if (x.readyState == 4 && x.status == 200) {
-            try {
-                var d = JSON.parse(x.responseText);
-                document.getElementById('ANN').innerText = d.announcements || "";
-                document.getElementById('TEF').innerText = d.tefila || "";
                 if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
                 if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
                 if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
