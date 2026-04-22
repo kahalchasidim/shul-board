@@ -2,9 +2,9 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master - Steady Version</title>
+<title>Bayswater Master - Smart Highlight</title>
 <style> 
-  /* --- 1. THE STYLE LOCK (CSS) - NO CHANGES --- */
+  /* --- 1. THE STYLE LOCK (CSS) --- */
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
@@ -18,10 +18,15 @@
   .main-clock { flex: 1.5; display: flex; align-items: center; justify-content: center; font-size: 18vh; font-weight: 800; font-family: 'Assistant', sans-serif; color: white; }
   .main-body { height: 72vh; display: flex; gap: 12px; }
   .zemanim-col { width: 22vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
-  .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; }
+  .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; transition: all 0.5s ease; }
   .z-label { color: var(--gold); font-size: 3.1vh; }
   .z-time { color: white; font-size: 2.9vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
   .z-time small { font-size: 0.75em; opacity: 0.8; }
+  
+  /* HIGHLIGHT STYLE */
+  .active-zman { background: var(--gold) !important; }
+  .active-zman .z-label, .active-zman .z-time { color: #000 !important; }
+
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; overflow: hidden; }
@@ -35,6 +40,158 @@
 </style>
 </head>
 <body>
+
+<div class="master-frame">
+  <div class="branding-bar">
+    <div id="ENG_DATE">--</div> 
+    <div style="font-size:3.2vh; color:#FDEFD4;">קהל חסידים ד'בעיסוואטער</div>
+    <div id="BSD">בס"ד</div> 
+  </div>
+  <div class="clock-section">
+    <div class="status-stack">
+        <div id="DAY_LABEL" style="font-size:4.5vh;">--</div> 
+        <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">--</div> 
+        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+    </div>
+    <div class="main-clock" id="CLOCK">00:00:00</div>
+    <div class="left-stack"><div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div></div>
+  </div>
+  <div class="main-body">
+    <div class="zemanim-col" id="ZMANIM_LIST">
+        <div class="z-row" id="r1"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r2"><span class="z-label">משיכיר</span><span class="z-time" id="z2">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r3"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r4"><span class="z-label">ק"ש מג"א</span><span class="z-time" id="z4">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r5"><span class="z-label">ק"ש גר"א</span><span class="z-time" id="z5">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r6"><span class="z-label">תפילה גר"א</span><span class="z-time" id="z6">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r7"><span class="z-label">חצות</span><span class="z-time" id="z7">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r8"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r9"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r10"><span class="z-label">שקיעה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
+        <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;"><span class="z-label" id="z_spec_label">--</span><span class="z-time" id="z_spec_time">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
+    </div>
+    <div class="content-col">
+      <div class="top-row"><div class="data-box"><span id="ANN"></span></div><div class="img-bleed"><img id="p1"></div><div class="data-box"><span id="TEF"></span></div></div>
+      <div class="bottom-row"><div class="img-bleed" style="flex:1.4;"><img id="p4"></div><div class="omer-box"><div class="omer-title">ספירת העומר</div><span id="O2">--</span><div id="O_BECHINA">--</div></div><div class="img-bleed" style="flex:1.4;"><img id="p5"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
+var lastIso = "";
+var lastOmerText = "";
+var currentZmanTimes = [];
+
+var schedule = {
+    "2026-04-21": { z:["4:41:12","5:16:04","6:08:22","8:47:15","9:31:02","10:38:44","12:54:10","1:29:55","6:15:32","7:40:18","8:53:10"], day:"יום שלישי", heb:"ד׳ אייר", omer:"תשעה עשר יום שהם שני שבועות וחמישה ימים", bechina:"הוד שבתפארת" },
+    "2026-04-22": { z:["4:40:02","5:14:48","6:07:05","8:45:55","9:30:12","10:37:34","12:54:02","1:29:44","6:16:15","7:41:22","8:54:08"], day:"יום רביעי", heb:"ה׳ אייר", omer:"עשרים יום שהם שני שבועות ושישה ימים", bechina:"יסוד שבתפארת" },
+    "2026-04-23": { z:["4:38:52","5:13:32","6:05:48","8:44:35","9:29:22","10:36:24","12:53:54","1:29:33","6:16:58","7:42:26","8:55:06"], day:"יום חמישי", heb:"ו׳ אייר", omer:"אחד ועשרים יום שהם שלושה שבועות", bechina:"מלכות שבתפארת" },
+    "2026-04-24": { z:["4:37:42","5:12:16","6:04:32","8:43:15","9:28:32","10:35:14","12:53:46","1:29:22","6:17:41","7:43:30","8:56:04"], day:"ערב שבת", heb:"ז׳ אייר", omer:"שניים ועשרים יום שהם שלושה שבועות ויום אחד", bechina:"חסד שבנצח", candle:"7:30:12" },
+    "2026-04-25": { z:["4:36:32","5:11:00","6:03:16","8:41:55","9:27:42","10:34:04","12:53:38","1:29:11","6:18:24","7:44:34","8:57:10"], day:"שבת קודש", heb:"ח׳ אייר", omer:"שלושה ועשרים יום שהם שלושה שבועות ושני ימים", bechina:"גבורה שבנצח", motzai:"8:57:10" },
+    "2026-04-26": { z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"], day:"יום ראשון", heb:"ט׳ אייר", omer:"ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים", bechina:"תפארת שבנצח" },
+    "2026-04-27": { z:["4:34:12","5:08:28","6:00:44","8:39:15","9:26:02","10:31:44","12:53:22","1:28:49","6:19:50","7:46:42","8:59:22"], day:"יום שני", heb:"י׳ אייר", omer:"חמישה ועשרים יום שהם שלושה שבועות וארבעה ימים", bechina:"נצח שבנצח" }
+};
+
+function fitText(el, initialVH) {
+    let parent = el.parentElement;
+    let vh = initialVH || 4.5;
+    el.style.fontSize = vh + "vh";
+    while ((el.scrollHeight > parent.clientHeight || el.scrollWidth > parent.clientWidth) && vh > 1.0) {
+        vh -= 0.1;
+        el.style.fontSize = vh + "vh";
+    }
+}
+
+function updateUI() {
+    var now = new Date();
+    var h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    var nowSec = (h * 3600) + (m * 60) + s;
+
+    document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    var d = new Date();
+    if (h > 20 || (h == 20 && m >= 28)) { d.setDate(d.getDate() + 1); }
+    var iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
+
+    if (iso !== lastIso) {
+        lastIso = iso;
+        var data = schedule[iso];
+        if (data) {
+            document.getElementById('DAY_LABEL').innerText = data.day;
+            document.getElementById('DATE_LABEL').innerText = data.heb + " תשפ״ו";
+            
+            let omerText = "היום " + data.omer + " לעומר";
+            if(omerText !== lastOmerText) {
+                lastOmerText = omerText;
+                let omerEl = document.getElementById('O2');
+                omerEl.innerText = omerText;
+                fitText(omerEl, 4.2); 
+            }
+            document.getElementById('O_BECHINA').innerText = data.bechina;
+            
+            currentZmanTimes = [];
+            for (let i=1; i<=11; i++) {
+                let p = data.z[i-1].split(':');
+                document.getElementById('z' + i).innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+                
+                // Convert to seconds for comparison
+                let hh = parseInt(p[0]);
+                if (hh < 12 && (i >= 7)) hh += 12; // PM adjustment for later Zmanim
+                currentZmanTimes.push({id: 'r'+i, sec: (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2])});
+            }
+            
+            var spec = document.getElementById('row_special');
+            if (data.candle || data.motzai) {
+                spec.style.display = 'flex';
+                let timeStr = data.candle || data.motzai;
+                document.getElementById('z_spec_label').innerText = data.candle ? 'הדלקת נרות' : 'מוצאי שבת';
+                let p = timeStr.split(':');
+                document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+            } else { spec.style.display = 'none'; }
+        }
+    }
+
+    // HIGHLIGHT LOGIC
+    let nextIndex = currentZmanTimes.findIndex(z => z.sec > nowSec);
+    document.querySelectorAll('.z-row').forEach(r => r.classList.remove('active-zman'));
+    if (nextIndex !== -1) {
+        document.getElementById(currentZmanTimes[nextIndex].id).classList.add('active-zman');
+    }
+}
+
+var lastAnn = "", lastTef = "";
+function loadData() {
+    var x = new XMLHttpRequest(); 
+    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
+    x.onreadystatechange = function() {
+        if (x.readyState == 4 && x.status == 200) {
+            try {
+                var d = JSON.parse(x.responseText);
+                let ann = document.getElementById('ANN'), tef = document.getElementById('TEF');
+                if (d.announcements !== lastAnn) {
+                    lastAnn = d.announcements; ann.innerText = d.announcements || ""; fitText(ann, 4.8);
+                }
+                if (d.tefila !== lastTef) {
+                    lastTef = d.tefila; tef.innerText = d.tefila || ""; fitText(tef, 4.8);
+                }
+                if (d.p1) document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200";
+                if (d.p4) document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000";
+                if (d.p5) document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000";
+            } catch(e){}
+        }
+    }; x.send();
+}
+
+setInterval(updateUI, 1000);
+updateUI();
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html><body>
 
 <div class="master-frame">
   <div class="branding-bar">
