@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board - Smooth & Flush</title>
+<title>Bayswater Master Board - Sorted Zmanim</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -41,7 +41,7 @@
   /* --- FLUSH EDGE FIXES --- */
   .left-stack { flex: 1; display: flex; align-items: stretch; justify-content: stretch; padding: 0; margin: 0; }
   .message-box { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.1; font-weight: bold; }
-  .teal-box { background: #004d40; color: #00bfa5; border-right: 3px solid #00bfa5; } /* Border only on the inside edge! */
+  .teal-box { background: #004d40; color: #00bfa5; border: 2px solid #00bfa5; border-radius: 12px; } 
   .gold-box { color: var(--gold); }
   /* ------------------------ */
 </style>
@@ -64,20 +64,22 @@
     <div class="left-stack" id="LEFT_MSG"></div>
   </div>
   <div class="main-body">
+    
     <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">משיכיר</span><span class="z-time" id="z2">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">הנץ החמה</span><span class="z-time" id="z3">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש מג"א</span><span class="z-time" id="z4">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">ק"ש גר"א</span><span class="z-time" id="z5">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">תפילה גר"א</span><span class="z-time" id="z6">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">חצות</span><span class="z-time" id="z7">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--<small>:--</small></span></div>
-        <div class="z-row"><span class="z-label">שקיעה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r1"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r2"><span class="z-label">הנחת תפילין</span><span class="z-time" id="z2">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r3"><span class="z-label">נץ החמה</span><span class="z-time" id="z3">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r4"><span class="z-label">סוף זק"ש מג"א</span><span class="z-time" id="z4">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r5"><span class="z-label">סוף זק"ש גר"א</span><span class="z-time" id="z5">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r6"><span class="z-label">סוף זמן תפילה</span><span class="z-time" id="z6">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r7"><span class="z-label">חצות היום</span><span class="z-time" id="z7">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r8"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r9"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r10"><span class="z-label">שקיעת החמה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
         <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;"><span class="z-label" id="z_spec_label">--</span><span class="z-time" id="z_spec_time">--:--<small>:--</small></span></div>
-        <div class="z-row" style="background:#2b2400;"><span class="z-label">ר"ת (72)</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label">רבינו תם</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
     </div>
+    
     <div class="content-col">
       <div class="top-row">
           <div class="data-box"><span id="ANN"></span></div>
@@ -99,10 +101,9 @@
 
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-var lastIso = "", lastOmerText = "", shkiaSeconds = null;
+var lastIso = "", lastOmerText = "", candleSeconds = null;
 var currentZmanTimes = [];
 
-// JUMPING FIX: These variables memorize the screen so it doesn't randomly reload
 var currentStatusHTML = "";
 var currentlyHighlightedId = null;
 var lastP1 = "", lastP4 = "", lastP5 = "";
@@ -158,21 +159,22 @@ function updateUI() {
             document.getElementById('O_BECHINA').innerText = data.bechina;
             
             currentZmanTimes = [];
+            candleSeconds = null; // Reset
+            
             let activeZmanCount = 0;
             for (let i=1; i<=11; i++) {
                 if (data.z[i-1]) {
                     activeZmanCount++;
                     let p = data.z[i-1].split(':');
+                    let p2 = p[2] || "00";
                     
-                    document.getElementById('z' + activeZmanCount).innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+                    document.getElementById('z' + activeZmanCount).innerHTML = p[0] + ":" + p[1] + "<small>:" + p2 + "</small>";
                     
                     let hh = parseInt(p[0]);
                     if (hh < 12 && (i >= 7)) hh += 12; 
-                    let zSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]);
+                    let zSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p2);
                     
-                    if (i === 10) { shkiaSeconds = zSec; } 
-                    
-                    currentZmanTimes.push({id: 'z'+activeZmanCount, sec: zSec});
+                    currentZmanTimes.push({id: 'r'+activeZmanCount, sec: zSec});
                 }
             }
             
@@ -182,12 +184,25 @@ function updateUI() {
                 let timeStr = data.candle || data.motzai;
                 document.getElementById('z_spec_label').innerText = data.candle ? 'הדלקת נרות' : 'מוצאי שבת';
                 let p = timeStr.split(':');
+                let p2 = p[2] || "00";
                 document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
+                
+                // Add Candle Lighting into chronological order!
+                let hh = parseInt(p[0]);
+                if (hh < 12) hh += 12; 
+                let specSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p2);
+                
+                if (data.candle) candleSeconds = specSec;
+                currentZmanTimes.push({id: 'row_special', sec: specSec});
+                
             } else { spec.style.display = 'none'; }
+            
+            // Re-sort times numerically so highlight works perfectly
+            currentZmanTimes.sort((a, b) => a.sec - b.sec);
         }
     }
 
-    var isPastCandles = (actualDayOfWeek === 5 && shkiaSeconds && currentSec >= (shkiaSeconds - (18 * 60)));
+    var isPastCandles = (actualDayOfWeek === 5 && candleSeconds && currentSec >= candleSeconds);
     var newStatusHTML = "";
     
     if (jewishDayOfWeek === 0 && actualDayOfWeek === 6) {
@@ -209,13 +224,11 @@ function updateUI() {
         newStatusHTML = '<div class="message-box gold-box" style="font-size: 4.5vh;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>';
     }
 
-    // JUMPING FIX: Only push to the screen if the box actually changed
     if (newStatusHTML !== currentStatusHTML) {
         currentStatusHTML = newStatusHTML;
         document.getElementById('LEFT_MSG').innerHTML = currentStatusHTML;
     }
 
-    // JUMPING FIX: Only update highlight class if the Zman shifted
     let nextIndex = currentZmanTimes.findIndex(z => z.sec > currentSec);
     let targetZmanId = nextIndex !== -1 ? currentZmanTimes[nextIndex].id : null;
     
@@ -223,7 +236,7 @@ function updateUI() {
         document.querySelectorAll('.z-row').forEach(r => r.classList.remove('active-zman'));
         if (targetZmanId) {
             let activeEl = document.getElementById(targetZmanId);
-            if(activeEl) { activeEl.parentElement.classList.add('active-zman'); }
+            if(activeEl) { activeEl.classList.add('active-zman'); }
         }
         currentlyHighlightedId = targetZmanId;
     }
@@ -245,7 +258,6 @@ function loadData() {
                     lastTef = d.tefila; tef.innerText = d.tefila || ""; fitText(tef, 4.8);
                 }
                 
-                // JUMPING FIX: Images only reload if you physically update the Sheet
                 if (d.p1 && d.p1 !== lastP1) { document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200"; lastP1 = d.p1; }
                 if (d.p4 && d.p4 !== lastP4) { document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000"; lastP4 = d.p4; }
                 if (d.p5 && d.p5 !== lastP5) { document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000"; lastP5 = d.p5; }
