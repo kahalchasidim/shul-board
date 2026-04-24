@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board - Rabbi Rules</title>
+<title>Bayswater Master Board - Final Custom</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -76,8 +76,8 @@
         <div class="z-row" id="r8"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--<small>:--</small></span></div>
         <div class="z-row" id="r9"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--<small>:--</small></span></div>
         <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;"><span class="z-label" id="z_spec_label">--</span><span class="z-time" id="z_spec_time">--:--<small>:--</small></span></div>
-        <div class="z-row" id="r10"><span class="z-label">שקיעת החמה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
-        <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label">רבינו תם</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
+	<div class="z-row" id="r10"><span class="z-label">שקיעת החמה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label" id="label_rt">רבינו תם</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
     </div>
     
     <div class="content-col">
@@ -158,6 +158,12 @@ function updateUI() {
     if (h > 20 || (h == 20 && m >= 28)) { flipDate.setDate(flipDate.getDate() + 1); }
     var iso = flipDate.getFullYear() + "-" + String(flipDate.getMonth() + 1).padStart(2, '0') + "-" + String(flipDate.getDate()).padStart(2, '0');
     var jewishDayOfWeek = flipDate.getDay(); 
+
+    // SMART LABEL SWITCH: רבינו תם -> זמן מוצאי שבת קודש
+    let rtLabel = document.getElementById('label_rt');
+    if (rtLabel) {
+        rtLabel.innerText = (actualDayOfWeek === 6) ? 'זמן מוצאי שבת קודש' : 'רבינו תם';
+    }
 
     var data = schedule[iso];
     
@@ -286,8 +292,8 @@ function loadData() {
                 }
                 
                 if (d.p1 && d.p1 !== lastP1) { document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200"; lastP1 = d.p1; }
-                if (d.p4 && d.p4 !== lastP4) { document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1200"; lastP4 = d.p4; }
-                if (d.p5 && d.p5 !== lastP5) { document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1200"; lastP5 = d.p5; }
+                if (d.p4 && d.p4 !== lastP4) { document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000"; lastP4 = d.p4; }
+                if (d.p5 && d.p5 !== lastP5) { document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000"; lastP5 = d.p5; }
             } catch(e){}
         }
     }; x.send();
