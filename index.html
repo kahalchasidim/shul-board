@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board</title>
+<title>Bayswater Master Board - Hardcoded</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -11,7 +11,8 @@
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
-  #BSD { right: 15px; } #ENG_DATE { left: 15px; }
+  #BSD { right: 25px; } 
+  #ENG_DATE { left: 25px; }
   .clock-section { height: 18vh; display: flex; align-items: stretch; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; background: #050505; }
   .status-stack, .left-stack { flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; }
   .main-clock { flex: 1.5; display: flex; align-items: center; justify-content: center; font-size: 18vh; font-weight: 800; font-family: 'Assistant', sans-serif; color: white; }
@@ -23,6 +24,7 @@
   .z-time small { font-size: 0.75em; opacity: 0.8; }
   .active-zman { background: var(--gold) !important; }
   .active-zman .z-label, .active-zman .z-time { color: #000 !important; }
+  
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; overflow: hidden; }
@@ -95,9 +97,9 @@ var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNA
 var lastIso = "";
 var lastOmerText = "";
 var currentZmanTimes = [];
+var shkiaSeconds = null;
 
-// Adding "rc: true" makes the board show Ya'aleh V'yavo. 
-// Adding "noTachanun: true" makes the board show No Tachanun.
+// Add 'rc: true' or 'noTachanun: true' below to test the Overrides!
 var schedule = {
     "2026-04-21": { day:"יום שלישי", heb:"ד׳ אייר", omer:"תשעה עשר יום שהם שני שבועות וחמישה ימים", bechina:"הוד שבתפארת", z:["4:41:12","5:16:04","6:08:22","8:47:15","9:31:02","10:38:44","12:54:10","1:29:55","6:15:32","7:40:18","8:53:10"] },
     "2026-04-22": { day:"יום רביעי", heb:"ה׳ אייר", omer:"עשרים יום שהם שני שבועות ושישה ימים", bechina:"יסוד שבתפארת", z:["4:40:02","5:14:48","6:07:05","8:45:55","9:30:12","10:37:34","12:54:02","1:29:44","6:16:15","7:41:22","8:54:08"] },
@@ -113,27 +115,30 @@ function fitText(el, initialVH) {
     let vh = initialVH || 4.5;
     el.style.fontSize = vh + "vh";
     while ((el.scrollHeight > parent.clientHeight || el.scrollWidth > parent.clientWidth) && vh > 1.0) {
-        vh -= 0.1;
-        el.style.fontSize = vh + "vh";
+        vh -= 0.1; el.style.fontSize = vh + "vh";
     }
 }
 
 function updateUI() {
     var now = new Date();
     var h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-    var nowSec = (h * 3600) + (m * 60) + s;
+    var currentSec = (h * 3600) + (m * 60) + s;
+    var actualDayOfWeek = now.getDay(); 
 
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
     document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    var d = new Date();
-    if (h > 20 || (h == 20 && m >= 28)) { d.setDate(d.getDate() + 1); }
-    var iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
+    // --- CALCULATE DATE FLIP ---
+    var flipDate = new Date(now.getTime());
+    if (h > 20 || (h == 20 && m >= 28)) { flipDate.setDate(flipDate.getDate() + 1); }
+    var iso = flipDate.getFullYear() + "-" + String(flipDate.getMonth() + 1).padStart(2, '0') + "-" + String(flipDate.getDate()).padStart(2, '0');
+    var jewishDayOfWeek = flipDate.getDay(); 
 
-    // REFRESH CONTENT IF DATE CHANGES
+    var data = schedule[iso];
+    
+    // REFRESH DATA IF DATE CHANGES
     if (iso !== lastIso) {
         lastIso = iso;
-        var data = schedule[iso];
         if (data) {
             document.getElementById('DAY_LABEL').innerText = data.day;
             document.getElementById('DATE_LABEL').innerText = data.heb + " תשפ״ו";
@@ -154,13 +159,15 @@ function updateUI() {
                     activeZmanCount++;
                     let p = data.z[i-1].split(':');
                     
-                    // The first 10 Zmanim target z1 through z10. The 11th (RT) targets z11.
                     document.getElementById('z' + activeZmanCount).innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
                     
-                    // Convert to seconds for highlighting comparison
                     let hh = parseInt(p[0]);
                     if (hh < 12 && (i >= 7)) hh += 12; // PM adjustment
-                    currentZmanTimes.push({id: 'z'+activeZmanCount, rowId: activeZmanCount === 11 ? 'r11' : 'z'+activeZmanCount, sec: (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2])});
+                    let zSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]);
+                    
+                    if (i === 10) { shkiaSeconds = zSec; } // Extract Shkia (Index 9 = z10)
+                    
+                    currentZmanTimes.push({id: 'z'+activeZmanCount, sec: zSec});
                 }
             }
             
@@ -172,31 +179,43 @@ function updateUI() {
                 let p = timeStr.split(':');
                 document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
             } else { spec.style.display = 'none'; }
-            
-            // --- STATUS BOX LOGIC (Changes automatically at 8:28 PM Flip) ---
-            var leftMsgBox = document.getElementById('LEFT_MSG');
-            if (data.rc) {
-                leftMsgBox.innerHTML = '<div style="background: #004d40; border: 2px solid #00bfa5; border-radius: 10px; padding: 10px; font-size: 4.5vh; color: #00bfa5; line-height: 1.1; font-weight: bold;">ראש חודש<br><span style="color: white; font-size: 3.5vh;">יעלה ויבא</span></div>';
-            } 
-            else if (data.day === "שבת קודש" || data.yomTov) {
-                leftMsgBox.innerHTML = '<div style="font-size: 5vh; color: var(--gold); line-height:1; font-weight:bold;">שבת קודש</div>'; 
-            } 
-            else if (data.noTachanun || data.day === "ערב שבת") {
-                let subText = data.day === "ערב שבת" ? "ערב שבת קודש" : "";
-                leftMsgBox.innerHTML = '<div style="background: #004d40; border: 2px solid #00bfa5; border-radius: 10px; padding: 10px; font-size: 4.5vh; color: #00bfa5; line-height: 1.1; font-weight: bold;">אין תחנון<br><span style="color: white; font-size: 3.5vh;">' + subText + '</span></div>';
-            } 
-            else {
-                leftMsgBox.innerHTML = '<div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>';
-            }
-            // ------------------------------------------------------------------
         }
     }
 
-    // HIGHLIGHT LOGIC
-    let nextIndex = currentZmanTimes.findIndex(z => z.sec > nowSec);
+    // --- CANDLE LIGHTING TRIGGER ---
+    var isPastCandles = (actualDayOfWeek === 5 && shkiaSeconds && currentSec >= (shkiaSeconds - (18 * 60)));
+
+    // --- SMART STATUS BOX RULES ---
+    var leftMsgBox = document.getElementById('LEFT_MSG');
+    
+    // Rule 1: Motzei Shabbos
+    if (jewishDayOfWeek === 0 && actualDayOfWeek === 6) {
+        leftMsgBox.innerHTML = '<div style="background: #004d40; border: 2px solid #00bfa5; border-radius: 10px; padding: 10px; font-size: 4.5vh; color: #00bfa5; line-height: 1.1; font-weight: bold;">מוצאי שבת<br><span style="color: white; font-size: 3.5vh;">אתה חוננתנו</span></div>';
+    }
+    // Rule 2: Shabbos Kodesh
+    else if (actualDayOfWeek === 6 || isPastCandles) {
+        leftMsgBox.innerHTML = '<div style="font-size: 5vh; color: var(--gold); line-height:1; font-weight:bold;">שבת קודש</div>'; 
+    }
+    // Rule 3: Manual Overrides from Schedule List
+    else if (data && data.rc) {
+        leftMsgBox.innerHTML = '<div style="background: #004d40; border: 2px solid #00bfa5; border-radius: 10px; padding: 10px; font-size: 4.5vh; color: #00bfa5; line-height: 1.1; font-weight: bold;">ראש חודש<br><span style="color: white; font-size: 3.5vh;">יעלה ויבא</span></div>';
+    } 
+    else if (data && data.noTachanun) {
+        leftMsgBox.innerHTML = '<div style="background: #004d40; border: 2px solid #00bfa5; border-radius: 10px; padding: 10px; font-size: 4.5vh; color: #00bfa5; line-height: 1.1; font-weight: bold;">אין תחנון<br><span style="color: white; font-size: 3.5vh;"></span></div>';
+    }
+    // Rule 4: Erev Shabbos
+    else if (actualDayOfWeek === 5) {
+        leftMsgBox.innerHTML = '<div style="background: #004d40; border: 2px solid #00bfa5; border-radius: 10px; padding: 10px; font-size: 4vh; color: #00bfa5; line-height: 1.1; font-weight: bold;">אין תחנון<br><span style="color: white; font-size: 3.5vh;">ערב שבת קודש</span></div>';
+    }
+    // Default: Morid Hatal
+    else {
+        leftMsgBox.innerHTML = '<div style="font-size: 4.5vh; color: var(--gold); line-height:1;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>';
+    }
+
+    // --- HIGHLIGHT LOGIC ---
+    let nextIndex = currentZmanTimes.findIndex(z => z.sec > currentSec);
     document.querySelectorAll('.z-row').forEach(r => r.classList.remove('active-zman'));
     if (nextIndex !== -1) {
-        // Target the parent element (.z-row) of the active zman time
         let activeEl = document.getElementById(currentZmanTimes[nextIndex].id);
         if(activeEl) { activeEl.parentElement.classList.add('active-zman'); }
     }
@@ -228,7 +247,7 @@ function loadData() {
 setInterval(updateUI, 1000);
 updateUI();
 loadData();
-setInterval(loadData, 30000); // Refreshes Google Sheet data every 30 seconds
+setInterval(loadData, 30000); 
 </script>
 </body>
 </html>
