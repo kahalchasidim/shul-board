@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board - Final Halachic Engine</title>
+<title>Bayswater Master Board - Duplicate Fixed</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -11,22 +11,18 @@
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
   .branding-bar { height: 4vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   #BSD, #ENG_DATE { position: absolute; font-size: 16px; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; }
-  #BSD { right: 15px; } 
-  #ENG_DATE { left: 15px; }
+  #BSD { right: 15px; } #ENG_DATE { left: 15px; }
   .clock-section { height: 18vh; display: flex; align-items: stretch; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; background: #050505; overflow: hidden; }
   .status-stack { flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; }
   .main-clock { flex: 1.5; display: flex; align-items: center; justify-content: center; font-size: 18vh; font-weight: 800; font-family: 'Assistant', sans-serif; color: white; }
   .main-body { height: 72vh; display: flex; gap: 12px; }
-  
   .zemanim-col { width: 20vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
-
   .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; transition: all 0.4s ease; }
   .z-label { color: var(--gold); font-size: 3.1vh; }
   .z-time { color: white; font-size: 2.9vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
   .z-time small { font-size: 0.75em; opacity: 0.8; }
   .active-zman { background: var(--gold) !important; }
   .active-zman .z-label, .active-zman .z-time { color: #000 !important; }
-  
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
   .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; overflow: hidden; }
@@ -37,7 +33,6 @@
   .omer-title { font-size: 2.2vh; color: #ccc; margin-bottom: 4px; }
   #O2 { color: var(--gold); font-weight: 800; line-height: 1.1; width: 100%; display: block; font-size: 4vh; }
   #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; margin-top: 8px; }
-
   .left-stack { flex: 1; display: flex; align-items: stretch; justify-content: stretch; padding: 0; margin: 0; }
   .message-box { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.1; font-weight: bold; }
   .teal-box { background: #004d40; color: #00bfa5; border: 2px solid #00bfa5; border-radius: 12px; } 
@@ -56,7 +51,7 @@
     <div class="status-stack">
         <div id="DAY_LABEL" style="font-size:4.5vh;">--</div> 
         <div id="DATE_LABEL" style="font-size:3.5vh; color:var(--gold);">--</div> 
-        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">פרשת אחרי מות-קדושים</div>
+        <div id="PARSHA_LABEL" style="font-size: 3.2vh; color: #ccc;">טוען...</div>
     </div>
     <div class="main-clock" id="CLOCK">00:00:00</div>
     <div class="left-stack" id="LEFT_MSG"></div>
@@ -98,258 +93,160 @@
 </div>
 
 <script>
+const $ = id => document.getElementById(id);
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-var lastIso = "", lastOmerText = "", alosSeconds = null, omerFlipSeconds = null, rtSeconds = null;
-var todayCandleSeconds = null; 
-var currentZmanTimes = [];
-
-var currentStatusHTML = "";
-var currentlyHighlightedId = null;
+var lastIso = "", lastOmerText = "", alosSecs = null, omerFlipSecs = null, rtSecs = null;
+var todayCandleSecs = null, currentZmanTimes = [], currentStatusHTML = "", currentlyHighlightedId = null;
 var lastP1 = "", lastP4 = "", lastP5 = "";
 
 var schedule = {
-    "2026-04-21": { day:"יום שלישי", heb:"ד׳ אייר", omer:"תשעה עשר יום שהם שני שבועות וחמישה ימים", bechina:"הוד שבתפארת", z:["4:41:12","5:16:04","6:08:22","8:47:15","9:31:02","10:38:44","12:54:10","1:29:55","6:15:32","7:40:18","8:53:10"] },
-    "2026-04-22": { day:"יום רביעי", heb:"ה׳ אייר", omer:"עשרים יום שהם שני שבועות ושישה ימים", bechina:"יסוד שבתפארת", z:["4:40:02","5:14:48","6:07:05","8:45:55","9:30:12","10:37:34","12:54:02","1:29:44","6:16:15","7:41:22","8:54:08"] },
-    "2026-04-23": { day:"יום חמישי", heb:"ו׳ אייר", omer:"אחד ועשרים יום שהם שלושה שבועות", bechina:"מלכות שבתפארת", z:["4:38:52","5:13:32","6:05:48","8:44:35","9:29:22","10:36:24","12:53:54","1:29:33","6:16:58","7:42:26","8:55:06"] },
-    "2026-04-24": { day:"ערב שבת", heb:"ז׳ אייר", omer:"שניים ועשרים יום שהם שלושה שבועות ויום אחד", bechina:"חסד שבנצח", candle:"7:30:12", z:["4:37:42","5:12:16","6:04:32","8:43:15","9:28:32","10:35:14","12:53:46","1:29:22","6:17:41","7:43:30","8:56:04"] },
-    "2026-04-25": { day:"שבת קודש", heb:"ח׳ אייר", omer:"שלושה ועשרים יום שהם שלושה שבועות ושני ימים", bechina:"גבורה שבנצח", motzai:"8:57:10", z:["4:36:32","5:11:00","6:03:16","8:41:55","9:27:42","10:34:04","12:53:38","1:29:11","6:18:24","7:44:34","8:57:10"] },
-    "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", omer:"ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים", bechina:"תפארת שבנצח", z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"] },
-    "2026-04-27": { day:"יום שני", heb:"י׳ אייר", omer:"חמישה ועשרים יום שהם שלושה שבועות וארבעה ימים", bechina:"נצח שבנצח", z:["4:34:12","5:08:28","6:00:44","8:39:15","9:26:02","10:31:44","12:53:22","1:28:49","6:19:50","7:46:42","8:59:22"] }
+    "2026-04-24": { day:"ערב שבת", heb:"ז׳ אייר", parsha:"אחרי מות-קדושים", omer:"שניים ועשרים יום שהם שלושה שבועות ויום אחד", bechina:"חסד שבנצח", candle:"7:30:12", z:["4:37:42","5:12:16","6:04:32","8:43:15","9:28:32","10:35:14","12:53:46","1:29:22","6:17:41","7:43:30","8:56:04"] },
+    "2026-04-25": { day:"שבת קודש", heb:"ח׳ אייר", parsha:"אחרי מות-קדושים", omer:"שלושה ועשרים יום שהם שלושה שבועות ושני ימים", bechina:"גבורה שבנצח", z:["4:36:32","5:11:00","6:03:16","8:41:55","9:27:42","10:34:04","12:53:38","1:29:11","6:18:24","7:44:34","8:57:10"] },
+    "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", parsha:"אמור", omer:"ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים", bechina:"תפארת שבנצח", z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"] },
+    "2026-04-27": { day:"יום שני", heb:"י׳ אייר", parsha:"אמור", omer:"חמישה ועשרים יום שהם שלושה שבועות וארבעה ימים", bechina:"נצח שבנצח", z:["4:34:12","5:08:28","6:00:44","8:39:15","9:26:02","10:31:44","12:53:22","1:28:49","6:19:50","7:46:42","8:59:22"] },
+    "2026-04-28": { day:"יום שלישי", heb:"י״א אייר", parsha:"אמור", omer:"שישה ועשרים יום שהם שלושה שבועות וחמישה ימים", bechina:"הוד שבנצח", z:["4:33:02","5:07:12","5:59:28","8:37:55","9:25:12","10:30:34","12:53:14","1:28:38","6:20:33","7:47:46","9:00:28"] },
+    "2026-04-29": { day:"יום רביעי", heb:"י״ב אייר", parsha:"אמור", omer:"שבעה ועשרים יום שהם שלושה שבועות ושישה ימים", bechina:"יסוד שבנצח", z:["4:31:52","5:05:56","5:58:12","8:36:35","9:24:22","10:29:24","12:53:06","1:28:27","6:21:16","7:48:50","9:01:34"] },
+    "2026-04-30": { day:"יום חמישי", heb:"י״ג אייר", parsha:"אמור", omer:"שמונה ועשרים יום שהם ארבעה שבועות", bechina:"מלכות שבנצח", z:["4:30:42","5:04:40","5:56:56","8:35:15","9:23:32","10:28:14","12:52:58","1:28:16","6:21:59","7:49:54","9:02:40"] },
+    "2026-05-01": { day:"ערב שבת", heb:"י״ד אייר", parsha:"אמור", omer:"תשעה ועשרים יום שהם ארבעה שבועות ויום אחד", bechina:"חסד שבהוד", noTachanun: true, candle:"7:37:12", z:["4:29:32","5:03:24","5:55:40","8:33:55","9:22:42","10:27:04","12:52:50","1:28:05","6:22:42","7:50:58","9:03:46"] },
+    "2026-05-02": { day:"שבת קודש", heb:"ט״ו אייר", parsha:"אמור", omer:"שלושים יום שהם ארבעה שבועות ושני ימים", bechina:"גבורה שבהוד", z:["4:28:22","5:02:08","5:54:24","8:32:35","9:21:52","10:25:54","12:52:42","1:27:54","6:23:25","7:52:02","9:04:52"] },
+    "2026-05-03": { day:"יום ראשון", heb:"ט״ז אייר", parsha:"בהר-בחוקותי", omer:"אחד ושלושים יום שהם ארבעה שבועות ושלושה ימים", bechina:"תפארת שבהוד", z:["4:27:12","5:00:52","5:53:08","8:31:15","9:21:02","10:24:44","12:52:34","1:27:43","6:24:08","7:53:06","9:05:58"] }
 };
 
-function addMinutes(timeStr, offset) {
-    if (!timeStr) return timeStr;
-    let p = timeStr.split(':');
-    let h = parseInt(p[0]);
-    let m = parseInt(p[1]);
-    let s = p[2] || "00";
-
-    let totalMins = h * 60 + m + offset;
-    let newH = Math.floor(totalMins / 60);
-    let newM = totalMins % 60;
-
-    if (newH > 12) newH -= 12;
-    if (newH === 0) newH = 12; 
-
-    return newH + ":" + String(newM).padStart(2, '0') + ":" + s;
+function addMins(tStr, offset) {
+    if (!tStr) return tStr;
+    let p = tStr.split(':'), h = parseInt(p[0]), m = parseInt(p[1]), s = p[2] || "00";
+    let tm = h * 60 + m + offset, nH = Math.floor(tm / 60), nM = tm % 60;
+    if (nH > 12) nH -= 12; if (nH === 0) nH = 12; 
+    return nH + ":" + String(nM).padStart(2, '0') + ":" + s;
 }
 
-function fitText(el, initialVH) {
-    let parent = el.parentElement;
-    let vh = initialVH || 4.5;
-    el.style.fontSize = vh + "vh";
-    while ((el.scrollHeight > parent.clientHeight || el.scrollWidth > parent.clientWidth) && vh > 1.0) {
+function fit(el, vh) {
+    if (!el) return; let p = el.parentElement; el.style.fontSize = vh + "vh";
+    while ((el.scrollHeight > p.clientHeight || el.scrollWidth > p.clientWidth) && vh > 1.0) {
         vh -= 0.1; el.style.fontSize = vh + "vh";
     }
 }
 
-function updateUI() {
-    var now = new Date();
-    var h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-    var currentSec = (h * 3600) + (m * 60) + s;
-    var actualDayOfWeek = now.getDay(); 
+function update() {
+    let now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    let cSec = (h * 3600) + (m * 60) + s, dayW = now.getDay(); 
 
-    document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
-    document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    $('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+    $('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // Extract basic times from the actual physical day
-    var baseDate = new Date(now.getTime());
-    var isoBase = baseDate.getFullYear() + "-" + String(baseDate.getMonth() + 1).padStart(2, '0') + "-" + String(baseDate.getDate()).padStart(2, '0');
+    let bDate = new Date(now.getTime()), isoB = bDate.getFullYear() + "-" + String(bDate.getMonth() + 1).padStart(2, '0') + "-" + String(bDate.getDate()).padStart(2, '0');
+    alosSecs = 4*3600 + 30*60; let shkiaSecs = 19*3600 + 30*60; rtSecs = shkiaSecs + (72*60); todayCandleSecs = null; 
     
-    alosSeconds = 4 * 3600 + 30 * 60; 
-    let shkiaSeconds = 19 * 3600 + 30 * 60; 
-    rtSeconds = shkiaSeconds + (72 * 60); 
-    todayCandleSeconds = null; 
+    if (schedule[isoB]) {
+        if (schedule[isoB].z[0]) { let p = schedule[isoB].z[0].split(':'); alosSecs = parseInt(p[0])*3600 + parseInt(p[1])*60; }
+        if (schedule[isoB].z[9]) { let p = schedule[isoB].z[9].split(':'); let hh = parseInt(p[0]); if(hh<12) hh+=12; shkiaSecs = (hh*3600) + (parseInt(p[1])*60) + parseInt(p[2]||"00"); }
+        if (schedule[isoB].z[10]) { let zs = addMins(schedule[isoB].z[10], 1); let p = zs.split(':'); let hh = parseInt(p[0]); if(hh<12) hh+=12; rtSecs = (hh*3600) + (parseInt(p[1])*60) + parseInt(p[2]||"00"); }
+        if (schedule[isoB].candle) { let p = schedule[isoB].candle.split(':'); let hh = parseInt(p[0]); if(hh<12) hh+=12; todayCandleSecs = hh*3600 + parseInt(p[1])*60 - 60; }
+    }
+    omerFlipSecs = rtSecs - (25*60);
+
+    let jDate = new Date(now.getTime()); if (cSec >= rtSecs) jDate.setDate(jDate.getDate() + 1);
+    let jIso = jDate.getFullYear() + "-" + String(jDate.getMonth()+1).padStart(2,'0') + "-" + String(jDate.getDate()).padStart(2,'0');
+    let jData = schedule[jIso] || schedule[isoB];
+    if(jData) $('DATE_LABEL').innerText = (jData.heb || "") + " תשפ״ו";
+
+    let oDate = new Date(now.getTime()); if (cSec >= omerFlipSecs) oDate.setDate(oDate.getDate() + 1);
+    let oIso = oDate.getFullYear() + "-" + String(oDate.getMonth()+1).padStart(2,'0') + "-" + String(oDate.getDate()).padStart(2,'0');
+    let oData = schedule[oIso] || schedule[isoB];
+    if(oData) {
+        let oTxt = "היום " + (oData.omer || "") + " לעומר";
+        if (oData.omer && oTxt !== lastOmerText) { lastOmerText = oTxt; $('O2').innerText = oTxt; fit($('O2'), 4.2); }
+        $('O_BECHINA').innerText = oData.bechina || "";
+    }
+
+    let tDate = new Date(now.getTime());
+    if (dayW === 5 && todayCandleSecs && cSec >= todayCandleSecs) tDate.setDate(tDate.getDate() + 1); 
+    else if (dayW !== 6 && cSec < alosSecs) tDate.setDate(tDate.getDate() - 1); 
     
-    if (schedule[isoBase]) {
-        if (schedule[isoBase].z && schedule[isoBase].z[0]) {
-            let p = schedule[isoBase].z[0].split(':');
-            alosSeconds = parseInt(p[0]) * 3600 + parseInt(p[1]) * 60;
-        }
-        if (schedule[isoBase].z && schedule[isoBase].z[9]) {
-            let p = schedule[isoBase].z[9].split(':');
-            let hh = parseInt(p[0]); if(hh < 12) hh += 12;
-            shkiaSeconds = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]||"00");
-        }
-        if (schedule[isoBase].z && schedule[isoBase].z[10]) {
-            let zStr = addMinutes(schedule[isoBase].z[10], 1); // Rabbi's rule
-            let p = zStr.split(':');
-            let hh = parseInt(p[0]); if(hh < 12) hh += 12;
-            rtSeconds = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]||"00");
-        }
-        if (schedule[isoBase].candle) {
-            let p = schedule[isoBase].candle.split(':');
-            let hh = parseInt(p[0]); if(hh < 12) hh += 12;
-            todayCandleSeconds = hh * 3600 + parseInt(p[1]) * 60 - 60; // Rabbi's rule
-        }
-    }
-    
-    // Set Omer flip to exactly 25 minutes before 72 (Rabbeinu Tam)
-    omerFlipSeconds = rtSeconds - (25 * 60);
-
-    // DATE OF THE MONTH ENGINE (Flips at 72)
-    var jewishDate = new Date(now.getTime());
-    if (currentSec >= rtSeconds) {
-        jewishDate.setDate(jewishDate.getDate() + 1);
-    }
-    var jewishIso = jewishDate.getFullYear() + "-" + String(jewishDate.getMonth() + 1).padStart(2, '0') + "-" + String(jewishDate.getDate()).padStart(2, '0');
-    var jewishData = schedule[jewishIso] || schedule[isoBase];
-    document.getElementById('DATE_LABEL').innerText = (jewishData.heb || "") + " תשפ״ו";
-
-    // OMER ENGINE (Flips 25 mins before 72)
-    var omerDate = new Date(now.getTime());
-    if (currentSec >= omerFlipSeconds) {
-        omerDate.setDate(omerDate.getDate() + 1);
-    }
-    var omerIso = omerDate.getFullYear() + "-" + String(omerDate.getMonth() + 1).padStart(2, '0') + "-" + String(omerDate.getDate()).padStart(2, '0');
-    var omerData = schedule[omerIso] || schedule[isoBase];
-
-    let omerText = "היום " + (omerData.omer || "") + " לעומר";
-    if (omerData.omer && omerText !== lastOmerText) {
-        lastOmerText = omerText;
-        let omerEl = document.getElementById('O2');
-        omerEl.innerText = omerText;
-        fitText(omerEl, 4.2); 
-    }
-    document.getElementById('O_BECHINA').innerText = omerData.bechina || "";
-
-    // DAY OF THE WEEK & ZMANIM ENGINE (Flips at Alos, Friday flips at Candles)
-    var targetDate = new Date(now.getTime());
-    if (actualDayOfWeek === 5 && todayCandleSeconds && currentSec >= todayCandleSeconds) {
-        targetDate.setDate(targetDate.getDate() + 1); 
-    } else if (actualDayOfWeek !== 6 && currentSec < alosSeconds) {
-        targetDate.setDate(targetDate.getDate() - 1); 
-    }
-    
-    var iso = targetDate.getFullYear() + "-" + String(targetDate.getMonth() + 1).padStart(2, '0') + "-" + String(targetDate.getDate()).padStart(2, '0');
-    var data = schedule[iso];
+    let iso = tDate.getFullYear() + "-" + String(tDate.getMonth()+1).padStart(2,'0') + "-" + String(tDate.getDate()).padStart(2,'0');
+    let d = schedule[iso];
 
     if (iso !== lastIso) {
         lastIso = iso;
-        if (data) {
-            document.getElementById('DAY_LABEL').innerText = data.day;
+        if (d) {
+            $('DAY_LABEL').innerText = d.day;
+            $('PARSHA_LABEL').innerText = d.parsha ? "פרשת " + d.parsha : "";
             
-            let rtLabel = document.getElementById('label_rt');
-            if (rtLabel) { rtLabel.innerText = (data.day === "שבת קודש") ? 'מוצאי שבת קודש' : 'רבינו תם'; }
-            
-            currentZmanTimes = [];
-            let activeZmanCount = 0;
+            if ($('label_rt')) $('label_rt').innerText = (d.day === "שבת קודש") ? 'מוצאי שבת קודש' : 'רבינו תם';
+            currentZmanTimes = []; let actZ = 0;
             for (let i=1; i<=11; i++) {
-                if (data.z[i-1]) {
-                    activeZmanCount++;
-                    let zmanStr = data.z[i-1];
-                    if (i === 11) { zmanStr = addMinutes(zmanStr, 1); } 
-                    let p = zmanStr.split(':');
-                    let p2 = p[2] || "00";
-                    document.getElementById('z' + activeZmanCount).innerHTML = p[0] + ":" + p[1] + "<small>:" + p2 + "</small>";
-                    
-                    let hh = parseInt(p[0]);
-                    if (hh < 12 && (i >= 7)) hh += 12; 
-                    let zSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p2);
-                    
-                    currentZmanTimes.push({id: 'r'+activeZmanCount, sec: zSec});
+                if (d.z && d.z[i-1]) {
+                    actZ++; let zs = d.z[i-1]; if (i===11) zs = addMins(zs, 1); 
+                    let p = zs.split(':'), p2 = p[2]||"00";
+                    $('z'+actZ).innerHTML = p[0] + ":" + p[1] + "<small>:" + p2 + "</small>";
+                    let hh = parseInt(p[0]); if(hh<12 && i>=7) hh+=12; 
+                    currentZmanTimes.push({id: 'r'+actZ, sec: (hh*3600) + (parseInt(p[1])*60) + parseInt(p2)});
                 }
             }
             
-            var spec = document.getElementById('row_special');
-            
-            var candleTimeToShow = data.candle;
-            if (!candleTimeToShow && data.day === "שבת קודש") {
-                var yesterday = new Date(targetDate.getTime());
-                yesterday.setDate(yesterday.getDate() - 1);
-                var yIso = yesterday.getFullYear() + "-" + String(yesterday.getMonth() + 1).padStart(2, '0') + "-" + String(yesterday.getDate()).padStart(2, '0');
-                if (schedule[yIso] && schedule[yIso].candle) {
-                    candleTimeToShow = schedule[yIso].candle;
-                }
+            let cShow = d.candle;
+            if (!cShow && d.day === "שבת קודש") {
+                let y = new Date(tDate.getTime()); y.setDate(y.getDate() - 1);
+                let yIso = y.getFullYear() + "-" + String(y.getMonth()+1).padStart(2,'0') + "-" + String(y.getDate()).padStart(2,'0');
+                if (schedule[yIso] && schedule[yIso].candle) cShow = schedule[yIso].candle;
             }
 
-            if (candleTimeToShow || data.motzai) {
-                spec.style.display = 'flex';
-                let timeStr = candleTimeToShow || data.motzai;
-                let isCandle = !!candleTimeToShow;
-                if (isCandle) { timeStr = addMinutes(timeStr, -1); } 
-                document.getElementById('z_spec_label').innerText = isCandle ? 'הדלקת נרות' : 'מוצאי שבת';
-                let p = timeStr.split(':');
-                let p2 = p[2] || "00";
-                document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
-                
-                let hh = parseInt(p[0]);
-                if (hh < 12) hh += 12; 
-                let specSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p2);
-                currentZmanTimes.push({id: 'row_special', sec: specSec});
+            // ONLY SHOW CANDLE LIGHTING HERE. Prevents duplicate Motzei Shabbos lines.
+            if (cShow) {
+                $('row_special').style.display = 'flex';
+                let ts = addMins(cShow, -1); 
+                $('z_spec_label').innerText = 'הדלקת נרות';
+                let p = ts.split(':'), p2 = p[2]||"00";
+                $('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p2 + "</small>";
+                let hh = parseInt(p[0]); if(hh<12) hh+=12; 
+                currentZmanTimes.push({id: 'row_special', sec: (hh*3600) + (parseInt(p[1])*60) + parseInt(p2)});
             } else { 
-                spec.style.display = 'none'; 
+                $('row_special').style.display = 'none'; 
             }
             
-            currentZmanTimes.sort((a, b) => a.sec - b.sec);
+            currentZmanTimes.sort((a,b) => a.sec - b.sec);
         }
     }
 
-    // Status Box Logic
-    var isPastCandles = (actualDayOfWeek === 5 && todayCandleSeconds && currentSec >= todayCandleSeconds);
-    var isMotzeiShabbos = (actualDayOfWeek === 6 && currentSec >= rtSeconds) || (actualDayOfWeek === 0 && currentSec < alosSeconds);
-    var isShabbosKodesh = isPastCandles || (actualDayOfWeek === 6 && currentSec < rtSeconds);
+    let isPastC = (dayW === 5 && todayCandleSecs && cSec >= todayCandleSecs);
+    let isMotz = (dayW === 6 && cSec >= rtSecs) || (dayW === 0 && cSec < alosSecs);
+    let isShab = isPastC || (dayW === 6 && cSec < rtSecs);
+    let newHTML = "";
 
-    var newStatusHTML = "";
-    if (isMotzeiShabbos) {
-        newStatusHTML = '<div class="message-box teal-box" style="font-size: 4.5vh;">מוצאי שבת<br><span style="color: white; font-size: 3.5vh;">אתה חוננתנו</span></div>';
-    } else if (isShabbosKodesh) {
-        newStatusHTML = '<div class="message-box gold-box" style="font-size: 5vh;">שבת קודש</div>'; 
-    } else if (data && data.rc) {
-        newStatusHTML = '<div class="message-box teal-box" style="font-size: 4.5vh;">ראש חודש<br><span style="color: white; font-size: 3.5vh;">יעלה ויבא</span></div>';
-    } else if (data && data.noTachanun) {
-        newStatusHTML = '<div class="message-box teal-box" style="font-size: 4.5vh;">אין אומרים תחנון<br><span style="color: white; font-size: 3.5vh;"></span></div>';
-    } else if (actualDayOfWeek === 5) {
-        newStatusHTML = '<div class="message-box teal-box" style="font-size: 4vh;">אין אומרים תחנון<br><span style="color: white; font-size: 3.5vh;">ערב שבת קודש</span></div>';
-    } else {
-        newStatusHTML = '<div class="message-box gold-box" style="font-size: 4.5vh;">מוריד הטל<br><span style="color:white; font-size:3.8vh;">ותן ברכה</span></div>';
-    }
+    if (isMotz) newHTML = '<div class="message-box teal-box" style="font-size:4.5vh;">מוצאי שבת<br><span style="color:white;font-size:3.5vh;">אתה חוננתנו</span></div>';
+    else if (isShab) newHTML = '<div class="message-box gold-box" style="font-size:5vh;">שבת קודש</div>'; 
+    else if (d && d.rc) newHTML = '<div class="message-box teal-box" style="font-size:4.5vh;">ראש חודש<br><span style="color:white;font-size:3.5vh;">יעלה ויבא</span></div>';
+    else if (d && d.noTachanun) newHTML = '<div class="message-box teal-box" style="font-size:4.5vh;">אין אומרים תחנון<br><span style="color:white;font-size:3.5vh;"></span></div>';
+    else if (dayW === 5) newHTML = '<div class="message-box teal-box" style="font-size:4vh;">אין אומרים תחנון<br><span style="color:white;font-size:3.5vh;">ערב שבת קודש</span></div>';
+    else newHTML = '<div class="message-box gold-box" style="font-size:4.5vh;">מוריד הטל<br><span style="color:white;font-size:3.8vh;">ותן ברכה</span></div>';
 
-    if (newStatusHTML !== currentStatusHTML) {
-        currentStatusHTML = newStatusHTML;
-        document.getElementById('LEFT_MSG').innerHTML = currentStatusHTML;
-    }
+    if (newHTML !== currentStatusHTML) { currentStatusHTML = newHTML; $('LEFT_MSG').innerHTML = currentStatusHTML; }
 
-    let nextIndex = currentZmanTimes.findIndex(z => z.sec > currentSec);
-    let targetZmanId = nextIndex !== -1 ? currentZmanTimes[nextIndex].id : null;
-    
-    if (targetZmanId !== currentlyHighlightedId) {
+    let nIdx = currentZmanTimes.findIndex(z => z.sec > cSec), tgtId = nIdx !== -1 ? currentZmanTimes[nIdx].id : null;
+    if (tgtId !== currentlyHighlightedId) {
         document.querySelectorAll('.z-row').forEach(r => r.classList.remove('active-zman'));
-        if (targetZmanId) {
-            let activeEl = document.getElementById(targetZmanId);
-            if(activeEl) { activeEl.classList.add('active-zman'); }
-        }
-        currentlyHighlightedId = targetZmanId;
+        if (tgtId && $(tgtId)) $(tgtId).classList.add('active-zman');
+        currentlyHighlightedId = tgtId;
     }
 }
 
-var lastAnn = "", lastTef = "";
 function loadData() {
-    var x = new XMLHttpRequest(); 
-    x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
+    let x = new XMLHttpRequest(); x.open("GET", SCRIPT_URL + "?cb=" + new Date().getTime(), true);
     x.onreadystatechange = function() {
         if (x.readyState == 4 && x.status == 200) {
             try {
-                var d = JSON.parse(x.responseText);
-                let ann = document.getElementById('ANN'), tef = document.getElementById('TEF');
-                if (d.announcements !== lastAnn) {
-                    lastAnn = d.announcements; ann.innerText = d.announcements || ""; fitText(ann, 4.8);
-                }
-                if (d.tefila !== lastTef) {
-                    lastTef = d.tefila; tef.innerText = d.tefila || ""; fitText(tef, 4.8);
-                }
-                if (d.p1 && d.p1 !== lastP1) { document.getElementById('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200"; lastP1 = d.p1; }
-                if (d.p4 && d.p4 !== lastP4) { document.getElementById('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000"; lastP4 = d.p4; }
-                if (d.p5 && d.p5 !== lastP5) { document.getElementById('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000"; lastP5 = d.p5; }
+                let d = JSON.parse(x.responseText);
+                if (d.announcements !== $('ANN').innerText) { $('ANN').innerText = d.announcements || ""; fit($('ANN'), 4.8); }
+                if (d.tefila !== $('TEF').innerText) { $('TEF').innerText = d.tefila || ""; fit($('TEF'), 4.8); }
+                if (d.p1 && d.p1 !== lastP1) { $('p1').src = "https://drive.google.com/thumbnail?id=" + d.p1 + "&sz=w1200"; lastP1 = d.p1; }
+                if (d.p4 && d.p4 !== lastP4) { $('p4').src = "https://drive.google.com/thumbnail?id=" + d.p4 + "&sz=w1000"; lastP4 = d.p4; }
+                if (d.p5 && d.p5 !== lastP5) { $('p5').src = "https://drive.google.com/thumbnail?id=" + d.p5 + "&sz=w1000"; lastP5 = d.p5; }
             } catch(e){}
         }
     }; x.send();
 }
 
-setInterval(updateUI, 1000);
-updateUI();
-loadData();
-setInterval(loadData, 30000); 
+setInterval(update, 1000); update(); loadData(); setInterval(loadData, 30000); 
 </script>
 </body>
 </html>
