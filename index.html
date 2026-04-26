@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board - Pinned Candles</title>
+<title>Bayswater Master Board - Final Halachic Engine</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -99,7 +99,7 @@
 
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-var lastIso = "", lastOmerText = "", shkiaSeconds = null, alosSeconds = null;
+var lastIso = "", lastOmerText = "", alosSeconds = null, omerFlipSeconds = null, rtSeconds = null;
 var todayCandleSeconds = null; 
 var currentZmanTimes = [];
 
@@ -111,7 +111,7 @@ var schedule = {
     "2026-04-21": { day:"יום שלישי", heb:"ד׳ אייר", omer:"תשעה עשר יום שהם שני שבועות וחמישה ימים", bechina:"הוד שבתפארת", z:["4:41:12","5:16:04","6:08:22","8:47:15","9:31:02","10:38:44","12:54:10","1:29:55","6:15:32","7:40:18","8:53:10"] },
     "2026-04-22": { day:"יום רביעי", heb:"ה׳ אייר", omer:"עשרים יום שהם שני שבועות ושישה ימים", bechina:"יסוד שבתפארת", z:["4:40:02","5:14:48","6:07:05","8:45:55","9:30:12","10:37:34","12:54:02","1:29:44","6:16:15","7:41:22","8:54:08"] },
     "2026-04-23": { day:"יום חמישי", heb:"ו׳ אייר", omer:"אחד ועשרים יום שהם שלושה שבועות", bechina:"מלכות שבתפארת", z:["4:38:52","5:13:32","6:05:48","8:44:35","9:29:22","10:36:24","12:53:54","1:29:33","6:16:58","7:42:26","8:55:06"] },
-    "2026-04-24": { day:"ערב שבת", heb:"ז׳ אייר", omer:"שנים ועשרים יום שהם שלושה שבועות ויום אחד", bechina:"חסד שבנצח", candle:"7:30:12", z:["4:37:42","5:12:16","6:04:32","8:43:15","9:28:32","10:35:14","12:53:46","1:29:22","6:17:41","7:43:30","8:56:04"] },
+    "2026-04-24": { day:"ערב שבת", heb:"ז׳ אייר", omer:"שניים ועשרים יום שהם שלושה שבועות ויום אחד", bechina:"חסד שבנצח", candle:"7:30:12", z:["4:37:42","5:12:16","6:04:32","8:43:15","9:28:32","10:35:14","12:53:46","1:29:22","6:17:41","7:43:30","8:56:04"] },
     "2026-04-25": { day:"שבת קודש", heb:"ח׳ אייר", omer:"שלושה ועשרים יום שהם שלושה שבועות ושני ימים", bechina:"גבורה שבנצח", motzai:"8:57:10", z:["4:36:32","5:11:00","6:03:16","8:41:55","9:27:42","10:34:04","12:53:38","1:29:11","6:18:24","7:44:34","8:57:10"] },
     "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", omer:"ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים", bechina:"תפארת שבנצח", z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"] },
     "2026-04-27": { day:"יום שני", heb:"י׳ אייר", omer:"חמישה ועשרים יום שהם שלושה שבועות וארבעה ימים", bechina:"נצח שבנצח", z:["4:34:12","5:08:28","6:00:44","8:39:15","9:26:02","10:31:44","12:53:22","1:28:49","6:19:50","7:46:42","8:59:22"] }
@@ -152,11 +152,13 @@ function updateUI() {
     document.getElementById('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
     document.getElementById('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    // Step 1: Extract basic times from the actual physical day
+    // Extract basic times from the actual physical day
     var baseDate = new Date(now.getTime());
     var isoBase = baseDate.getFullYear() + "-" + String(baseDate.getMonth() + 1).padStart(2, '0') + "-" + String(baseDate.getDate()).padStart(2, '0');
+    
     alosSeconds = 4 * 3600 + 30 * 60; 
-    shkiaSeconds = 19 * 3600 + 30 * 60; 
+    let shkiaSeconds = 19 * 3600 + 30 * 60; 
+    rtSeconds = shkiaSeconds + (72 * 60); 
     todayCandleSeconds = null; 
     
     if (schedule[isoBase]) {
@@ -169,32 +171,49 @@ function updateUI() {
             let hh = parseInt(p[0]); if(hh < 12) hh += 12;
             shkiaSeconds = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]||"00");
         }
+        if (schedule[isoBase].z && schedule[isoBase].z[10]) {
+            let zStr = addMinutes(schedule[isoBase].z[10], 1); // Rabbi's rule
+            let p = zStr.split(':');
+            let hh = parseInt(p[0]); if(hh < 12) hh += 12;
+            rtSeconds = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]||"00");
+        }
         if (schedule[isoBase].candle) {
             let p = schedule[isoBase].candle.split(':');
             let hh = parseInt(p[0]); if(hh < 12) hh += 12;
             todayCandleSeconds = hh * 3600 + parseInt(p[1]) * 60 - 60; // Rabbi's rule
         }
     }
+    
+    // Set Omer flip to exactly 25 minutes before 72 (Rabbeinu Tam)
+    omerFlipSeconds = rtSeconds - (25 * 60);
 
-    // Step 2: JEWISH DATE ENGINE (Flips at Shkia)
+    // DATE OF THE MONTH ENGINE (Flips at 72)
     var jewishDate = new Date(now.getTime());
-    if (currentSec >= shkiaSeconds) {
+    if (currentSec >= rtSeconds) {
         jewishDate.setDate(jewishDate.getDate() + 1);
     }
     var jewishIso = jewishDate.getFullYear() + "-" + String(jewishDate.getMonth() + 1).padStart(2, '0') + "-" + String(jewishDate.getDate()).padStart(2, '0');
     var jewishData = schedule[jewishIso] || schedule[isoBase];
-
     document.getElementById('DATE_LABEL').innerText = (jewishData.heb || "") + " תשפ״ו";
-    let omerText = "היום " + (jewishData.omer || "") + " לעומר";
-    if (jewishData.omer && omerText !== lastOmerText) {
+
+    // OMER ENGINE (Flips 25 mins before 72)
+    var omerDate = new Date(now.getTime());
+    if (currentSec >= omerFlipSeconds) {
+        omerDate.setDate(omerDate.getDate() + 1);
+    }
+    var omerIso = omerDate.getFullYear() + "-" + String(omerDate.getMonth() + 1).padStart(2, '0') + "-" + String(omerDate.getDate()).padStart(2, '0');
+    var omerData = schedule[omerIso] || schedule[isoBase];
+
+    let omerText = "היום " + (omerData.omer || "") + " לעומר";
+    if (omerData.omer && omerText !== lastOmerText) {
         lastOmerText = omerText;
         let omerEl = document.getElementById('O2');
         omerEl.innerText = omerText;
         fitText(omerEl, 4.2); 
     }
-    document.getElementById('O_BECHINA').innerText = jewishData.bechina || "";
+    document.getElementById('O_BECHINA').innerText = omerData.bechina || "";
 
-    // Step 3: ZMANIM ENGINE (Stays on "Today" until Alos tomorrow)
+    // DAY OF THE WEEK & ZMANIM ENGINE (Flips at Alos, Friday flips at Candles)
     var targetDate = new Date(now.getTime());
     if (actualDayOfWeek === 5 && todayCandleSeconds && currentSec >= todayCandleSeconds) {
         targetDate.setDate(targetDate.getDate() + 1); 
@@ -204,7 +223,6 @@ function updateUI() {
     
     var iso = targetDate.getFullYear() + "-" + String(targetDate.getMonth() + 1).padStart(2, '0') + "-" + String(targetDate.getDate()).padStart(2, '0');
     var data = schedule[iso];
-    var rtSec = null;
 
     if (iso !== lastIso) {
         lastIso = iso;
@@ -229,14 +247,12 @@ function updateUI() {
                     if (hh < 12 && (i >= 7)) hh += 12; 
                     let zSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p2);
                     
-                    if (i === 11) { rtSec = zSec; }
                     currentZmanTimes.push({id: 'r'+activeZmanCount, sec: zSec});
                 }
             }
             
             var spec = document.getElementById('row_special');
             
-            // NEW RULE: Keep Friday's Candle Lighting pinned on Shabbos!
             var candleTimeToShow = data.candle;
             if (!candleTimeToShow && data.day === "שבת קודש") {
                 var yesterday = new Date(targetDate.getTime());
@@ -247,10 +263,12 @@ function updateUI() {
                 }
             }
 
-            if (candleTimeToShow) {
+            if (candleTimeToShow || data.motzai) {
                 spec.style.display = 'flex';
-                let timeStr = addMinutes(candleTimeToShow, -1); 
-                document.getElementById('z_spec_label').innerText = 'הדלקת נרות';
+                let timeStr = candleTimeToShow || data.motzai;
+                let isCandle = !!candleTimeToShow;
+                if (isCandle) { timeStr = addMinutes(timeStr, -1); } 
+                document.getElementById('z_spec_label').innerText = isCandle ? 'הדלקת נרות' : 'מוצאי שבת';
                 let p = timeStr.split(':');
                 let p2 = p[2] || "00";
                 document.getElementById('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + p[2] + "</small>";
@@ -265,18 +283,12 @@ function updateUI() {
             
             currentZmanTimes.sort((a, b) => a.sec - b.sec);
         }
-    } else {
-        if (data && data.z[10]) {
-             let zmanStr = addMinutes(data.z[10], 1);
-             let p = zmanStr.split(':');
-             let hh = parseInt(p[0]); if (hh < 12) hh += 12;
-             rtSec = (hh * 3600) + (parseInt(p[1]) * 60) + parseInt(p[2]||"00");
-        }
     }
 
+    // Status Box Logic
     var isPastCandles = (actualDayOfWeek === 5 && todayCandleSeconds && currentSec >= todayCandleSeconds);
-    var isMotzeiShabbos = (actualDayOfWeek === 6 && rtSec && currentSec >= rtSec) || (actualDayOfWeek === 0 && currentSec < alosSeconds);
-    var isShabbosKodesh = isPastCandles || (actualDayOfWeek === 6 && (!rtSec || currentSec < rtSec));
+    var isMotzeiShabbos = (actualDayOfWeek === 6 && currentSec >= rtSeconds) || (actualDayOfWeek === 0 && currentSec < alosSeconds);
+    var isShabbosKodesh = isPastCandles || (actualDayOfWeek === 6 && currentSec < rtSeconds);
 
     var newStatusHTML = "";
     if (isMotzeiShabbos) {
