@@ -2,10 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board - Complete Logic Final</title>
+<title>Bayswater Master Board - GitHub Final Stable</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
-  :root { --gold: #c29d6d; --teal-bg: #004d40; --teal-border: #00bfa5; }
+  :root { --gold: #c29d6d; }
   * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
   body { background: #000; color: #fff; font-family: 'Suez One', serif; width: 100vw; height: 100vh; }
   .master-frame { height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: 10px; gap: 10px; border: 12px solid var(--gold); }
@@ -13,44 +13,45 @@
   .branding-bar { height: 5.5vh; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #333; }
   .branding-shul { font-size: 4.2vh; color: #FDEFD4; font-weight: bold; white-space: nowrap; line-height: 1; }
   #ENG_SIDE { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 2.8vh; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; display: flex; gap: 8px; align-items: center; direction: ltr; white-space: nowrap; }
-  #BSD { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 2.8vh; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; white-space: nowrap; }
   #WEATHER { color: #ccc; }
+  #BSD { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 2.8vh; color: var(--gold); font-family: 'Assistant', sans-serif; font-weight: 700; white-space: nowrap; }
   
   .clock-section { height: 18vh; display: flex; align-items: stretch; justify-content: space-between; border: 2px solid var(--gold); border-radius: 12px; background: #050505; overflow: hidden; }
   .main-clock { flex: 1.5; display: flex; align-items: center; justify-content: center; font-size: 19vh; line-height: 0.8; font-weight: 800; font-family: 'Assistant', sans-serif; color: white; padding: 0; margin: 0; transform: translateY(-0.5vh); }
   
   .status-stack { flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 0; margin: 0; }
   .status-bound { width: 100%; height: 33.33%; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0; }
-  .status-bound span { display: inline-block; white-space: nowrap; line-height: 1.1; width: 100%; text-align: center; }
+  .status-bound span { display: inline-block; white-space: nowrap; line-height: 1.1; }
 
   .left-stack { flex: 1; display: flex; align-items: stretch; justify-content: stretch; padding: 0; margin: 0; }
   .message-box { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-weight: bold; border-radius: 12px; padding: 0; margin: 0; }
   .status-bound-left { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0; }
   #dyn-status { display: inline-block; line-height: 1.1; width: 100%; }
 
-  .teal-box { background: var(--teal-bg) !important; color: var(--teal-border) !important; border: 2px solid var(--teal-border) !important; } 
+  .teal-box { background: #004d40; color: #00bfa5; border: 2px solid #00bfa5; } 
   .gold-box { color: var(--gold); }
 
   .main-body { height: 71vh; display: flex; gap: 12px; }
   .zemanim-col { width: 20vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
-  .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; transition: background 0.4s ease; }
+  .z-row { display: flex; justify-content: space-between; padding: 0px 8px; border-bottom: 1px solid #222; align-items: center; flex: 1; transition: all 0.4s ease; }
   .z-label { color: var(--gold); font-size: 3.1vh; }
   .z-time { color: white; font-size: 2.9vh; font-family: 'Assistant', sans-serif; font-weight: 800; direction: ltr; }
+  .z-time small { font-size: 0.75em; opacity: 0.8; }
   .active-zman { background: var(--gold) !important; }
   .active-zman .z-label, .active-zman .z-time { color: #000 !important; }
 
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 0; text-align: center; overflow: hidden; }
-  .data-box span { font-weight: 800; line-height: 1.1; width: 100%; word-wrap: break-word; display: block; }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; overflow: hidden; }
+  .data-box span { font-weight: 800; line-height: 1.1; width: 100%; word-wrap: break-word; display: block; font-size: 4.5vh; }
   
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
   .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
   
-  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #001f1a; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 2px 0; text-align: center; overflow: hidden; transition: background 0.5s ease; }
-  .omer-title { font-size: 3.2vh; color: #ccc; margin: 0; line-height: 0.9; font-weight: bold; }
-  #O2 { font-weight: 800; line-height: 0.95; width: 100%; display: block; }
-  #O_BECHINA { font-size: 3.5vh; color: #fff; border-top: 1px solid #444; padding-top: 2px; width: 100%; line-height: 1; }
+  .omer-box { flex: 1; border: 2px solid var(--gold); border-radius: 10px; background: #001f1a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; overflow: hidden; }
+  .omer-title { font-size: 2.2vh; color: #ccc; margin-bottom: 4px; }
+  #O2 { color: var(--gold); font-weight: 800; line-height: 1.1; width: 100%; display: block; font-size: 4vh; }
+  #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -72,18 +73,18 @@
   </div>
   <div class="main-body">
     <div class="zemanim-col" id="ZMANIM_LIST">
-        <div class="z-row" id="r1"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">--:--</span></div>
-        <div class="z-row" id="r2"><span class="z-label">הנחת תפילין</span><span class="z-time" id="z2">--:--</span></div>
-        <div class="z-row" id="r3"><span class="z-label">נץ החמה</span><span class="z-time" id="z3">--:--</span></div>
-        <div class="z-row" id="r4"><span class="z-label">סוף זק"ש מג"א</span><span class="z-time" id="z4">--:--</span></div>
-        <div class="z-row" id="r5"><span class="z-label">סוף זק"ש גר"א</span><span class="z-time" id="z5">--:--</span></div>
-        <div class="z-row" id="r6"><span class="z-label">סוף זמן תפילה</span><span class="z-time" id="z6">--:--</span></div>
-        <div class="z-row" id="r7"><span class="z-label">חצות היום</span><span class="z-time" id="z7">--:--</span></div>
-        <div class="z-row" id="r8"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--</span></div>
-        <div class="z-row" id="r9"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--</span></div>
-        <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;"><span class="z-label" id="z_spec_label">--</span><span class="z-time" id="z_spec_time">--:--</span></div>
-        <div class="z-row" id="r10"><span class="z-label">שקיעת החמה</span><span class="z-time" id="z10">--:--</span></div>
-        <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label" id="label_rt">רבינו תם</span><span class="z-time" id="z11">--:--</span></div>
+        <div class="z-row" id="r1"><span class="z-label">עלות השחר</span><span class="z-time" id="z1">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r2"><span class="z-label">הנחת תפילין</span><span class="z-time" id="z2">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r3"><span class="z-label">נץ החמה</span><span class="z-time" id="z3">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r4"><span class="z-label">סוף זק"ש מג"א</span><span class="z-time" id="z4">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r5"><span class="z-label">סוף זק"ש גר"א</span><span class="z-time" id="z5">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r6"><span class="z-label">סוף זמן תפילה</span><span class="z-time" id="z6">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r7"><span class="z-label">חצות היום</span><span class="z-time" id="z7">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r8"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r9"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--<small>:--</small></span></div>
+        <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;"><span class="z-label" id="z_spec_label">--</span><span class="z-time" id="z_spec_time">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r10"><span class="z-label">שקיעת החמה</span><span class="z-time" id="z10">--:--<small>:--</small></span></div>
+        <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label" id="label_rt">רבינו תם</span><span class="z-time" id="z11">--:--<small>:--</small></span></div>
     </div>
     <div class="content-col">
       <div class="top-row">
@@ -107,17 +108,26 @@
 <script>
 const $ = id => document.getElementById(id);
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-var lastIso = "", alosSecs = null, rtSecs = null, todayCandleSecs = null, currentZmanTimes = [], currentStatusHTML = "", currentlyHighlightedId = null;
+var lastIso = "", lastOmerBoxHTML = "", alosSecs = null, rtSecs = null, todayCandleSecs = null, currentZmanTimes = [], currentStatusHTML = "", currentlyHighlightedId = null;
+var lastP1 = "", lastP4 = "", lastP5 = "";
 
+// HARDCODED SCHEDULE
 var schedule = {
-    "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", parsha:"אמור", omer:"ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים", bechina:"תפארת שבנצח", z:["4:35:00","5:10:00","6:02:00","8:41:00","9:27:00","10:33:00","12:53:00","1:29:00","6:19:00","7:45:00","8:58:00"] },
-    "2026-05-16": { day:"שבת קודש", heb:"כ״ט אייר", parsha:"במדבר", moladYid:"המולד שבת קודש צופרי 8 חלקים", moladEng:"The Molad will be Saturday morning", z:["4:12:00","4:48:00","5:45:00","8:30:00","9:15:00","10:20:00","12:53:00","1:28:00","6:30:00","8:05:00","9:18:00"] }
+    "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", parsha:"אמור", omer:"ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים", bechina:"תפארת שבנצח", z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"] },
+    "2026-05-16": { 
+        day:"שבת קודש", heb:"כ״ט אייר", parsha:"במדבר", 
+        moladYid:"המולד שבת קודש צופרי 8 חלקים", 
+        moladEng:"The Molad will be Saturday morning", 
+        z:["4:12:00","4:48:00","5:45:00","8:30:00","9:15:00","10:20:00","12:53:00","1:28:00","6:30:00","8:05:00","9:18:00"] 
+    }
 };
 
-function addMins(t, o) {
-    if(!t) return t; let p=t.split(':'), h=parseInt(p[0]), m=parseInt(p[1]), s=p[2]||"00";
-    let tm=h*60+m+o, nH=Math.floor(tm/60), nM=tm%60; if(nH>12) nH-=12; if(nH===0) nH=12;
-    return nH+":"+String(nM).padStart(2,'0')+":"+s;
+function addMins(tStr, offset) {
+    if (!tStr) return tStr;
+    let p = tStr.split(':'), h = parseInt(p[0]), m = parseInt(p[1]), s = p[2] || "00";
+    let tm = h * 60 + m + offset, nH = Math.floor(tm / 60), nM = tm % 60;
+    if (nH > 12) nH -= 12; if (nH === 0) nH = 12; 
+    return nH + ":" + String(nM).padStart(2, '0') + ":" + s;
 }
 
 function fit(el, startVh) {
@@ -125,9 +135,9 @@ function fit(el, startVh) {
     let p = el.parentElement; 
     let vh = startVh; 
     el.style.fontSize = vh + "vh";
-    let limit = (el.id === "O2") ? 0.92 : 1.0;
-    while ((el.scrollHeight > p.clientHeight * limit || el.scrollWidth > p.clientWidth) && vh > 1.0) {
-        vh -= 0.1; el.style.fontSize = vh + "vh";
+    while ((el.scrollHeight > p.clientHeight || el.scrollWidth > p.clientWidth) && vh > 1.0) {
+        vh -= 0.1; 
+        el.style.fontSize = vh + "vh";
     }
 }
 
@@ -139,29 +149,31 @@ function loadWeather() {
 }
 
 function updateUI() {
-    let now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), cSec = (h * 3600) + (m * 60) + s, dayW = now.getDay(); 
+    let now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    let cSec = (h * 3600) + (m * 60) + s, dayW = now.getDay(); 
+
     $('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
     $('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    let isoB = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, '0') + "-" + String(now.getDate()).padStart(2, '0');
+    let bDate = new Date(now.getTime()), isoB = bDate.getFullYear() + "-" + String(bDate.getMonth() + 1).padStart(2, '0') + "-" + String(bDate.getDate()).padStart(2, '0');
     let d = schedule[isoB];
 
+    // --- SMART OMER / MOLAD / DECORUM SWAP ---
     let cMins = (h * 60) + m;
     let isMoladTime = (dayW === 6 && cMins >= 540 && cMins <= 750); 
+    let boxHTML = "";
     if (isMoladTime && d && d.moladYid) {
-        $('OMER').classList.add('teal-box'); $('OT').style.display = "block"; $('OT').innerText = "המולד";
-        $('O2').innerText = d.moladYid; $('O2').style.color = "inherit";
-        $('O_BECHINA').style.display = "block"; $('O_BECHINA').innerText = d.moladEng || "";
+        boxHTML = '<div class="omer-title">המולד</div><span id="O2" style="color:var(--gold); font-weight:800; display:block; direction:rtl;">' + d.moladYid + '</span><div id="O_BECHINA" style="font-size:2.4vh; color:#fff; border-top:1px solid #444; padding-top:5px; width:95%; margin-top:8px; direction:ltr; font-family:sans-serif;">' + (d.moladEng || "") + '</div>';
     } else if (d && d.omer) {
-        $('OMER').classList.add('teal-box'); $('OT').style.display = "block"; $('OT').innerText = "ספירת העומר";
-        $('O2').innerText = "היום " + d.omer + " לעומר"; $('O2').style.color = "inherit";
-        $('O_BECHINA').style.display = "block"; $('O_BECHINA').innerText = d.bechina || "";
+        boxHTML = '<div class="omer-title">ספירת העומר</div><span id="O2" style="color:var(--gold); font-weight:800; display:block;">היום ' + d.omer + ' לעומר</span><div id="O_BECHINA" style="font-size:2.8vh; color:#fff; border-top:1px solid #444; padding-top:5px; width:90%; margin-top:8px;">' + (d.bechina || "") + '</div>';
     } else {
-        $('OMER').classList.remove('teal-box'); $('OT').style.display = "none";
-        $('O2').innerText = "נא לשמור על קדושת בית הכנסת ולהימנע משיחות בזמן התפילה וקריאת התורה";
-        $('O2').style.color = "#fff"; $('O_BECHINA').style.display = "none";
+        boxHTML = '<div id="O2" style="color:#fff; font-weight:800; display:block; line-height:1.4;">נא לשמור על קדושת בית הכנסת ולהימנע משיחות בזמן התפילה וקריאת התורה</div>';
     }
-    fit($('O2'), 6.5);
+
+    if (boxHTML !== lastOmerBoxHTML) {
+        $('OMER').innerHTML = boxHTML; lastOmerBoxHTML = boxHTML;
+        if ($('O2')) setTimeout(() => fit($('O2'), 4.2), 50);
+    }
 
     if (isoB !== lastIso) {
         lastIso = isoB;
@@ -169,16 +181,42 @@ function updateUI() {
             $('DAY_LABEL').innerText = d.day; fit($('DAY_LABEL'), 10.0);
             $('DATE_LABEL').innerText = d.heb + " תשפ״ו"; fit($('DATE_LABEL'), 10.0);
             $('PARSHA_LABEL').innerText = d.parsha ? "פרשת " + d.parsha : ""; fit($('PARSHA_LABEL'), 10.0);
+            
+            if ($('label_rt')) $('label_rt').innerText = (d.day === "שבת קודש") ? 'מוצאי שבת קודש' : 'רבינו תם';
             currentZmanTimes = [];
             for (let i=1; i<=11; i++) {
                 if (d.z && d.z[i-1]) {
-                    let zs = (i===11) ? addMins(d.z[i-1], 1) : d.z[i-1], p = zs.split(':');
-                    $('z'+i).innerHTML = p[0] + ":" + p[1];
+                    let zs = (i===11) ? addMins(d.z[i-1], 1) : d.z[i-1];
+                    let p = zs.split(':'), p2 = p[2]||"00";
+                    $('z'+i).innerHTML = p[0] + ":" + p[1] + "<small>:" + p2 + "</small>";
                     let hh = parseInt(p[0]); if(hh<12 && i>=7) hh+=12; 
-                    currentZmanTimes.push({id: 'r'+i, sec: (hh*3600) + (parseInt(p[1])*60)});
+                    currentZmanTimes.push({id: 'r'+i, sec: (hh*3600) + (parseInt(p[1])*60) + parseInt(p2)});
                 }
             }
+            if (d.candle) {
+                $('row_special').style.display = 'flex';
+                let ts = addMins(d.candle, -1);
+                let p = ts.split(':'); $('z_spec_time').innerHTML = p[0] + ":" + p[1] + "<small>:" + (p[2]||"00") + "</small>";
+                let hh = parseInt(p[0]); if(hh<12) hh+=12; 
+                todayCandleSecs = hh*3600 + parseInt(p[1])*60;
+                currentZmanTimes.push({id: 'row_special', sec: todayCandleSecs});
+            } else { $('row_special').style.display = 'none'; }
+            currentZmanTimes.sort((a,b) => a.sec - b.sec);
         }
+    }
+
+    let isPastC = (dayW === 5 && todayCandleSecs && cSec >= todayCandleSecs);
+    let isMotz = (dayW === 6 && rtSecs && cSec >= rtSecs) || (dayW === 0 && alosSecs && cSec < alosSecs);
+    let isShab = isPastC || (dayW === 6 && (!rtSecs || cSec < rtSecs));
+
+    let newHTML = isMotz ? '<div class="message-box teal-box"><div class="status-bound-left"><span id="dyn-status">מוצאי שבת קודש<br><span style="color:white;font-size:0.7em;">אתה חוננתנו</span></span></div></div>' :
+                  isShab ? '<div class="message-box gold-box"><div class="status-bound-left"><span id="dyn-status">שבת קודש</span></div></div>' :
+                  (d && d.rc ? '<div class="message-box teal-box"><div class="status-bound-left"><span id="dyn-status">ראש חודש<br><span style="color:white;font-size:0.7em;">יעלה ויבא</span></span></div></div>' :
+                  '<div class="message-box gold-box"><div class="status-bound-left"><span id="dyn-status">מוריד הטל<br><span style="color:white;font-size:0.7em;">ותן ברכה</span></span></div></div>');
+
+    if (newHTML !== currentStatusHTML) { 
+        currentStatusHTML = newHTML; $('LEFT_MSG').innerHTML = currentStatusHTML; 
+        setTimeout(() => { if ($('dyn-status')) fit($('dyn-status'), 14.0); }, 50); 
     }
 
     let nIdx = currentZmanTimes.findIndex(z => z.sec > cSec), tgtId = nIdx !== -1 ? currentZmanTimes[nIdx].id : null;
@@ -187,13 +225,6 @@ function updateUI() {
         if (tgtId && $(tgtId)) $(tgtId).classList.add('active-zman');
         currentlyHighlightedId = tgtId;
     }
-
-    let isShab = (dayW === 6 && (!rtSecs || cSec < rtSecs));
-    let newHTML = isShab ? '<div class="message-box gold-box"><div class="status-bound-left"><span id="dyn-status">שבת קודש</span></div></div>' :
-                  (d && d.rc ? '<div class="message-box teal-box"><div class="status-bound-left"><span id="dyn-status">ראש חודש<br><span style="color:white;font-size:0.7em;">יעלה ויבא</span></span></div></div>' :
-                  '<div class="message-box gold-box"><div class="status-bound-left"><span id="dyn-status">מוריד הטל<br><span style="color:white;font-size:0.7em;">ותן ברכה</span></span></div></div>');
-
-    if (newHTML !== currentStatusHTML) { currentStatusHTML = newHTML; $('LEFT_MSG').innerHTML = currentStatusHTML; setTimeout(() => { if ($('dyn-status')) fit($('dyn-status'), 14.0); }, 50); }
 }
 
 function loadData() {
