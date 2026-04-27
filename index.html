@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Bayswater Master Board - Precision Flip Final</title>
+<title>Bayswater Master Board - Morid HaTol Fix</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&family=Suez+One&display=swap');
   :root { --gold: #c29d6d; }
@@ -20,13 +20,16 @@
   .main-clock { flex: 1.5; display: flex; align-items: center; justify-content: center; font-size: 19vh; line-height: 0.8; font-weight: 800; font-family: 'Assistant', sans-serif; color: white; padding: 0; margin: 0; transform: translateY(-0.5vh); }
   
   .status-stack { flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 0; margin: 0; }
-  .status-bound { width: 100%; height: 33.33%; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0; }
+  .status-bound { width: 100%; height: 33.33%; display: flex; align-items: center; justify-content: center; }
   .status-bound span { display: inline-block; white-space: nowrap; line-height: 1.1; }
 
-  .left-stack { flex: 1; display: flex; align-items: stretch; justify-content: stretch; padding: 0; margin: 0; }
-  .message-box { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-weight: bold; border-radius: 12px; padding: 0; margin: 0; }
-  .status-bound-left { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0; }
+  .left-stack { flex: 1; display: flex; align-items: stretch; justify-content: stretch; }
+  .message-box { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-weight: bold; border-radius: 12px; }
+  .status-bound-left { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   #dyn-status { display: inline-block; line-height: 1.1; width: 100%; }
+
+  .teal-box { background: #004d40; color: #00bfa5; border: 2px solid #00bfa5; } 
+  .gold-box { color: var(--gold); }
 
   .main-body { height: 71vh; display: flex; gap: 12px; }
   .zemanim-col { width: 20vw; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; padding: 4px; background: #050505; }
@@ -38,13 +41,13 @@
 
   .content-col { flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .top-row, .bottom-row { height: 48%; display: flex; gap: 12px; }
-  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; overflow: hidden; }
+  .data-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #080808; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; }
   .data-box span { font-weight: 800; line-height: 1.1; width: 100%; word-wrap: break-word; display: block; font-size: 4.5vh; }
   
   .img-bleed { border: 2px solid var(--gold); border-radius: 10px; background: #000; overflow: hidden; flex: 1.5; position: relative; }
-  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .img-bleed img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
   
-  .omer-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #001f1a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; overflow: hidden; }
+  .omer-box { flex: 1.2; border: 2px solid var(--gold); border-radius: 10px; background: #001f1a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; }
   .omer-title { font-size: 2.2vh; color: #ccc; margin-bottom: 4px; }
   #O2 { color: var(--gold); font-weight: 800; line-height: 1.1; width: 100%; display: block; font-size: 4vh; }
   #O_BECHINA { font-size: 2.8vh; color: #fff; border-top: 1px solid #444; padding-top: 5px; width: 90%; margin-top: 8px; }
@@ -78,7 +81,6 @@
         <div class="z-row" id="r7"><span class="z-label">חצות היום</span><span class="z-time" id="z7">--:--:--</span></div>
         <div class="z-row" id="r8"><span class="z-label">מנחה גדולה</span><span class="z-time" id="z8">--:--:--</span></div>
         <div class="z-row" id="r9"><span class="z-label">פלג המנחה</span><span class="z-time" id="z9">--:--:--</span></div>
-        <div class="z-row" id="row_special" style="display:none; background:#1a3a3a;"><span class="z-label" id="z_spec_label">--</span><span class="z-time" id="z_spec_time">--:--:--</span></div>
         <div class="z-row" id="r10"><span class="z-label">שקיעת החמה</span><span class="z-time" id="z10">--:--:--</span></div>
         <div class="z-row" id="r11" style="background:#2b2400;"><span class="z-label" id="label_rt">רבינו תם</span><span class="z-time" id="z11">--:--:--</span></div>
     </div>
@@ -104,7 +106,6 @@
 <script>
 const $ = id => document.getElementById(id);
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLBmMyBsYacZv2Ku14XNAoG132ZZEa02ktGmQSojs7eCob9AOXALRPYyo_5QeACSnU8g/exec";
-var lastDateIso = "", lastOmerIso = "", lastOmerBoxHTML = "", currentZmanTimes = [], currentlyHighlightedId = null;
 
 const OMER_STRINGS = {
     24: "ארבעה ועשרים יום שהם שלושה שבועות ושלושה ימים",
@@ -113,9 +114,11 @@ const OMER_STRINGS = {
 };
 
 var schedule = {
-    "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", parsha:"אמור", omerNum: 24, bechina:"תפארת שבנצח", z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"] },
-    "2026-04-27": { day:"יום שני", heb:"י׳ אייר", parsha:"אמור", omerNum: 25, bechina:"נצח שבנצח", z:["4:33:41","5:08:15","6:00:39","8:39:45","9:26:12","10:32:30","12:53:23","1:29:00","6:19:57","7:46:46","8:59:33"] }
+    "2026-04-26": { day:"יום ראשון", heb:"ט׳ אייר", parsha:"אמור", omerNum: 24, bechina:"תפארת שבנצח", rc: false, z:["4:35:22","5:09:44","6:02:00","8:40:35","9:26:52","10:32:54","12:53:30","1:29:00","6:19:07","7:45:38","8:58:16"] },
+    "2026-04-27": { day:"יום שני", heb:"י׳ אייר", parsha:"אמור", omerNum: 25, bechina:"נצח שבנצח", rc: false, z:["4:33:41","5:08:15","6:00:39","8:39:45","9:26:12","10:32:30","12:53:23","1:29:00","6:19:57","7:46:46","8:59:33"] }
 };
+
+var lastDateIso = "", lastOmerIso = "", currentStatusHTML = "", currentZmanTimes = [], currentlyHighlightedId = null;
 
 function getSec(tStr, isPM) {
     if (!tStr) return 0;
@@ -132,16 +135,9 @@ function fit(el, startVh) {
     }
 }
 
-function loadWeather() {
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=40.598&longitude=-73.765&current_weather=true&temperature_unit=fahrenheit")
-    .then(r => r.json()).then(data => {
-        if(data && data.current_weather) $('WEATHER').innerText = " | " + Math.round(data.current_weather.temperature) + "°F";
-    });
-}
-
 function updateUI() {
     let now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-    let cSec = (h * 3600) + (m * 60) + s; 
+    let cSec = (h * 3600) + (m * 60) + s, dayW = now.getDay(); 
 
     $('CLOCK').innerHTML = (h % 12 || 12) + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
     $('ENG_DATE').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -151,24 +147,24 @@ function updateUI() {
     if (!dToday) return;
 
     // --- LOGIC 1: OMER FLIP (25 MINS BEFORE RT) ---
-    let rtSecs = getSec(dToday.z[10], true);
+    let rtSecsToday = getSec(dToday.z[10], true);
     let omerActiveIso = isoToday;
-    if (cSec >= (rtSecs - 1500)) {
+    if (cSec >= (rtSecsToday - 1500)) {
         let tomorrow = new Date(now.getTime() + 86400000);
         omerActiveIso = tomorrow.getFullYear() + "-" + String(tomorrow.getMonth() + 1).padStart(2, '0') + "-" + String(tomorrow.getDate()).padStart(2, '0');
     }
     let dOmer = schedule[omerActiveIso] || dToday;
 
     // --- LOGIC 2: DATE FLIP (AT ALOS) ---
-    let alosSecs = getSec(dToday.z[0], false);
+    let alosSecsToday = getSec(dToday.z[0], false);
     let dateActiveIso = isoToday;
-    if (cSec < alosSecs) {
+    if (cSec < alosSecsToday) {
         let yesterday = new Date(now.getTime() - 86400000);
         dateActiveIso = yesterday.getFullYear() + "-" + String(yesterday.getMonth() + 1).padStart(2, '0') + "-" + String(yesterday.getDate()).padStart(2, '0');
     }
     let dDate = schedule[dateActiveIso] || dToday;
 
-    // --- RENDER HEBREW DATE (Sunday 9 Iyar) ---
+    // --- RENDER HEBREW DATE ---
     if (dateActiveIso !== lastDateIso) {
         lastDateIso = dateActiveIso;
         $('DAY_LABEL').innerText = dDate.day;
@@ -182,14 +178,28 @@ function updateUI() {
         }
     }
 
-    // --- RENDER OMER (Now shows Omer 25) ---
+    // --- RENDER OMER ---
     if (omerActiveIso !== lastOmerIso) {
         lastOmerIso = omerActiveIso;
         if (dOmer.omerNum) {
             let fullText = OMER_STRINGS[dOmer.omerNum] || dOmer.omerNum + " יום";
             $('OMER').innerHTML = '<div class="omer-title">ספירת העומר</div><span id="O2">היום ' + fullText + ' לעומר</span><div id="O_BECHINA">' + (dOmer.bechina || "") + '</div>';
-            fit($('O2'), 4.2);
+            setTimeout(() => fit($('O2'), 4.2), 50);
         }
+    }
+
+    // --- RENDER STATUS BOX (Morid HaTol / Rosh Chodesh) ---
+    let isMotz = (dayW === 6 && cSec >= rtSecsToday);
+    let isShab = (dayW === 5 && cSec >= (rtSecsToday - 4320)) || (dayW === 6 && cSec < rtSecsToday);
+
+    let newHTML = isMotz ? '<div class="message-box teal-box"><div class="status-bound-left"><span id="dyn-status">מוצאי שבת קודש<br><span style="color:white;font-size:0.7em;">אתה חוננתנו</span></span></div></div>' :
+                  isShab ? '<div class="message-box gold-box"><div class="status-bound-left"><span id="dyn-status">שבת קודש</span></div></div>' :
+                  (dDate.rc ? '<div class="message-box teal-box"><div class="status-bound-left"><span id="dyn-status">ראש חודש<br><span style="color:white;font-size:0.7em;">יעלה ויבא</span></span></div></div>' :
+                  '<div class="message-box gold-box"><div class="status-bound-left"><span id="dyn-status">מוריד הטל<br><span style="color:white;font-size:0.7em;">ותן ברכה</span></span></div></div>');
+
+    if (newHTML !== currentStatusHTML) { 
+        currentStatusHTML = newHTML; $('LEFT_MSG').innerHTML = currentStatusHTML; 
+        setTimeout(() => { if ($('dyn-status')) fit($('dyn-status'), 14.0); }, 50); 
     }
 
     // Highlighting
@@ -217,7 +227,7 @@ function loadData() {
     }; x.send();
 }
 
-setInterval(updateUI, 1000); updateUI(); loadWeather(); setInterval(loadWeather, 900000); loadData(); setInterval(loadData, 30000); 
+setInterval(updateUI, 1000); updateUI(); loadData(); setInterval(loadData, 30000); 
 </script>
 </body>
 </html>
